@@ -8,9 +8,6 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
-.claude
-.vscode
-AGENTS.md
 
 # Native
 .kotlin/
@@ -35,6 +32,10 @@ yarn-error.*
 
 # local env files
 .env*.local
+AGENTS.md
+.claude
+.vscode
+
 
 # typescript
 *.tsbuildinfo
