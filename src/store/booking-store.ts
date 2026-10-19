@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -74,12 +74,9 @@ export const useBookingStore = create<BookingState>()(
 
 /** Resolves once persisted state has been loaded from AsyncStorage */
 export function useStoreHydrated() {
-  const [hydrated, setHydrated] = useState(() => useBookingStore.persist.hasHydrated());
-  useEffect(() => {
-    const unsubscribe = useBookingStore.persist.onFinishHydration(() => setHydrated(true));
-    // Hydration may have finished between the initial render and this subscription
-    if (useBookingStore.persist.hasHydrated()) setHydrated(true);
-    return unsubscribe;
-  }, []);
-  return hydrated;
+  return useSyncExternalStore(
+    (onChange) => useBookingStore.persist.onFinishHydration(onChange),
+    () => useBookingStore.persist.hasHydrated(),
+    () => false,
+  );
 }
