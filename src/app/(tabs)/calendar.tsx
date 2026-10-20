@@ -74,27 +74,27 @@ export default function CalendarScreen() {
           <Animated.Text
             key={monthName(weekStart)}
             entering={FadeInDown.springify()}
-            className="text-[30px] font-black tracking-tight text-mist">
-            {monthName(selected)} <Text className="text-mist-faint">{selected.getFullYear()}</Text>
+            className="text-[30px] font-black tracking-tight text-ink">
+            {monthName(selected)} <Text className="text-ink-faint">{selected.getFullYear()}</Text>
           </Animated.Text>
           <View className="flex-row items-center gap-2">
             {!isToday && (
               <Animated.View entering={FadeIn}>
-                <PressableScale onPress={goToday} className="rounded-full bg-ink-700 px-3 py-2">
+                <PressableScale onPress={goToday} className="rounded-full bg-surface-2 px-3 py-2">
                   <Text className="text-xs font-bold text-pink">Today</Text>
                 </PressableScale>
               </Animated.View>
             )}
-            <PressableScale onPress={() => changeWeek(-1)} className="h-9 w-9 items-center justify-center rounded-full bg-ink-700">
-              <Ionicons name="chevron-back" size={18} color={palette.mist} />
+            <PressableScale onPress={() => changeWeek(-1)} className="h-9 w-9 items-center justify-center rounded-full bg-surface-2">
+              <Ionicons name="chevron-back" size={18} color={palette.ink} />
             </PressableScale>
-            <PressableScale onPress={() => changeWeek(1)} className="h-9 w-9 items-center justify-center rounded-full bg-ink-700">
-              <Ionicons name="chevron-forward" size={18} color={palette.mist} />
+            <PressableScale onPress={() => changeWeek(1)} className="h-9 w-9 items-center justify-center rounded-full bg-surface-2">
+              <Ionicons name="chevron-forward" size={18} color={palette.ink} />
             </PressableScale>
           </View>
         </View>
 
-        <View className="mt-4 rounded-3xl border border-white/5 bg-ink-800/80 px-1">
+        <View className="mt-4 rounded-3xl border border-line bg-surface px-1">
           <WeekStrip
             weekStart={weekStart}
             selected={selected}
@@ -106,8 +106,8 @@ export default function CalendarScreen() {
 
         <View className="mt-5 flex-row items-end justify-between">
           <View>
-            <Text className="text-base font-extrabold text-mist">{formatDayLong(selected)}</Text>
-            <Text className="mt-0.5 text-xs text-mist-muted">
+            <Text className="text-base font-extrabold text-ink">{formatDayLong(selected)}</Text>
+            <Text className="mt-0.5 text-xs text-ink-muted">
               {active.length} booked · {formatDuration(minutes || 0)} · {money(revenue)}
               {cancelled ? ` · ${cancelled} cancelled` : ''}
             </Text>
@@ -134,7 +134,7 @@ export default function CalendarScreen() {
         ) : mode === 'timeline' ? (
           <Animated.View key={dayKey(selected)} entering={FadeIn.duration(250)}>
             <DayTimeline day={selected} bookings={dayBookings} now={now} />
-            <Text className="mt-2 text-center text-xs text-mist-faint">Tap an empty hour to book it</Text>
+            <Text className="mt-2 text-center text-xs text-ink-faint">Tap an empty hour to book it</Text>
           </Animated.View>
         ) : dayBookings.length === 0 ? (
           <EmptyState emoji="📭" title="Nothing booked" subtitle="This day is wide open.">

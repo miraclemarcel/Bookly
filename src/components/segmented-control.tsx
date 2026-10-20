@@ -25,11 +25,11 @@ export function SegmentedControl<T extends string>({ options, value, onChange }:
 
   return (
     <View
-      className="flex-row rounded-2xl border border-white/5 bg-ink-800 p-1"
+      className="flex-row rounded-2xl border border-line bg-surface p-1"
       onLayout={(e) => setWidth(e.nativeEvent.layout.width - 8)}>
       {width > 0 && (
         <Animated.View
-          className="absolute bottom-1 left-1 top-1 rounded-xl bg-ink-600"
+          className="absolute bottom-1 left-1 top-1 rounded-xl bg-surface-3"
           style={[{ width: segment }, pillStyle]}
         />
       )}
@@ -43,7 +43,7 @@ export function SegmentedControl<T extends string>({ options, value, onChange }:
               if (!active) haptic.tap();
               onChange(o.value);
             }}>
-            <Text className={`text-sm font-semibold ${active ? 'text-mist' : 'text-mist-faint'}`}>
+            <Text className={`text-sm font-semibold ${active ? 'text-ink' : 'text-ink-faint'}`}>
               {o.label}
             </Text>
           </Pressable>

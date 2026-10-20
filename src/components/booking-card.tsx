@@ -109,7 +109,7 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
     transform: [{ scale: interpolate(x.get(), [-THRESHOLD - 30, -THRESHOLD, 0], [1.25, 1, 0.6], Extrapolation.CLAMP) }],
   }));
   const trackStyle = useAnimatedStyle(() => ({
-    backgroundColor: x.get() > 0 ? 'rgba(52,211,153,0.16)' : 'rgba(251,113,133,0.16)',
+    backgroundColor: x.get() > 0 ? 'rgba(5,150,105,0.12)' : 'rgba(225,29,72,0.10)',
     opacity: interpolate(Math.abs(x.get()), [0, 30], [0, 1], Extrapolation.CLAMP),
   }));
 
@@ -139,7 +139,7 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
       <GestureDetector gesture={gesture}>
         <Animated.View
           style={cardStyle}
-          className={`flex-row items-center rounded-3xl border border-white/5 bg-ink-800 p-4 ${inactive ? 'opacity-50' : ''}`}>
+          className={`flex-row items-center rounded-3xl border border-line bg-surface p-4 ${inactive ? 'opacity-50' : ''}`}>
           <LinearGradient
             colors={service.colors}
             start={{ x: 0, y: 0 }}
@@ -147,23 +147,23 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
             className="mr-4 w-1.5 self-stretch rounded-full"
           />
           <View className="w-[70px]">
-            <Text className="text-[15px] font-bold text-mist">{formatTime(booking.startDate)}</Text>
-            <Text className="mt-0.5 text-xs text-mist-faint">
+            <Text className="text-[15px] font-bold text-ink">{formatTime(booking.startDate)}</Text>
+            <Text className="mt-0.5 text-xs text-ink-faint">
               {showDate ?? formatDuration(service.duration)}
             </Text>
           </View>
           <View className="flex-1 pr-2">
             <Text
               numberOfLines={1}
-              className={`text-[15px] font-semibold text-mist ${booking.status === 'cancelled' ? 'line-through' : ''}`}>
+              className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}>
               {client.name}
             </Text>
-            <Text numberOfLines={1} className="mt-0.5 text-[13px] text-mist-muted">
+            <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
               {service.emoji}  {service.name}
             </Text>
           </View>
           <View className="items-end">
-            <Text className="mb-1.5 text-sm font-bold text-mist">
+            <Text className="mb-1.5 text-sm font-bold text-ink">
               {service.price ? money(service.price) : 'Free'}
             </Text>
             <StatusChip status={booking.status} />

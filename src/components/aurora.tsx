@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { palette } from '@/lib/theme';
+import { brand, palette } from '@/lib/theme';
 
 interface BlobProps {
   color: string;
@@ -61,7 +61,7 @@ function Blob({ color, size, x, y, duration, delay = 0, drift = 40 }: BlobProps)
             height: size * k,
             borderRadius: (size * k) / 2,
             backgroundColor: color,
-            opacity: 0.07,
+            opacity: 0.045,
           }}
         />
       ))}
@@ -74,10 +74,10 @@ export function Aurora({ intensity = 1 }: { intensity?: number }) {
   const { width, height } = useWindowDimensions();
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, { opacity: intensity }]}>
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: palette.ink900 }]} />
-      <Blob color={palette.violet} size={width * 1.1} x={width * 0.1} y={height * 0.05} duration={9000} />
-      <Blob color={palette.pink} size={width * 0.9} x={width * 0.95} y={height * 0.22} duration={11000} delay={800} />
-      <Blob color={palette.amber} size={width * 0.7} x={width * 0.3} y={height * 0.85} duration={13000} delay={1600} drift={60} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: palette.canvas }]} />
+      <Blob color={brand.violet} size={width * 1.1} x={width * 0.1} y={height * 0.05} duration={9000} />
+      <Blob color={brand.pink} size={width * 0.9} x={width * 0.95} y={height * 0.22} duration={11000} delay={800} />
+      <Blob color={brand.amber} size={width * 0.7} x={width * 0.3} y={height * 0.85} duration={13000} delay={1600} drift={60} />
     </View>
   );
 }

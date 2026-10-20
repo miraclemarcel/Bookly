@@ -62,19 +62,19 @@ function Bar({
     <Pressable onPress={onPress} className="flex-1 items-center">
       <View style={{ height: CHART_HEIGHT + 22 }} className="w-full items-center justify-end">
         {selected && (
-          <Animated.View entering={FadeInDown.springify()} className="mb-1.5 rounded-lg bg-white px-1.5 py-0.5">
-            <Text className="text-[10px] font-black text-ink-900">{money(value)}</Text>
+          <Animated.View entering={FadeInDown.springify()} className="mb-1.5 rounded-lg bg-ink px-1.5 py-0.5">
+            <Text className="text-[10px] font-black text-white">{money(value)}</Text>
           </Animated.View>
         )}
         <Animated.View style={style} className="w-[70%] overflow-hidden rounded-xl">
           {highlight || selected ? (
             <LinearGradient colors={[palette.pink, palette.violet]} className="flex-1" />
           ) : (
-            <View className="flex-1 bg-ink-600" />
+            <View className="flex-1 bg-surface-3" />
           )}
         </Animated.View>
       </View>
-      <Text className={`mt-2 text-[10px] font-semibold ${selected ? 'text-mist' : 'text-mist-faint'}`}>{label}</Text>
+      <Text className={`mt-2 text-[10px] font-semibold ${selected ? 'text-ink' : 'text-ink-faint'}`}>{label}</Text>
     </Pressable>
   );
 }
@@ -86,7 +86,7 @@ function GrowBar({ ratio, color, delay }: { ratio: number; color: string; delay:
   }, [w, ratio, delay]);
   const style = useAnimatedStyle(() => ({ width: `${w.get() * 100}%` }));
   return (
-    <View className="h-2 overflow-hidden rounded-full bg-ink-600">
+    <View className="h-2 overflow-hidden rounded-full bg-surface-3">
       <Animated.View style={[style, { backgroundColor: color }]} className="h-full rounded-full" />
     </View>
   );
@@ -191,8 +191,8 @@ export default function InsightsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 140, paddingHorizontal: 20 }}>
-        <Text className="text-[30px] font-black tracking-tight text-mist">Insights</Text>
-        <Text className="text-sm text-mist-muted">How the studio is doing</Text>
+        <Text className="text-[30px] font-black tracking-tight text-ink">Insights</Text>
+        <Text className="text-sm text-ink-muted">How the studio is doing</Text>
 
         <View className="mt-5">
           <SegmentedControl
@@ -209,9 +209,9 @@ export default function InsightsScreen() {
         </View>
 
         <Animated.View entering={FadeInDown.springify().damping(15)} className="mt-5 overflow-hidden rounded-4xl">
-          <LinearGradient colors={['#1F1538', '#12121E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} className="p-5">
+          <LinearGradient colors={['#F3EDFF', '#FFF0F7']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} className="p-5">
             <View className="flex-row items-center justify-between">
-              <Text className="text-xs font-bold uppercase tracking-[2px] text-mist-muted">Earned</Text>
+              <Text className="text-xs font-bold uppercase tracking-[2px] text-ink-muted">Earned</Text>
               <View
                 className="flex-row items-center rounded-full px-2.5 py-1"
                 style={{ backgroundColor: (up ? palette.mint : palette.coral) + '22' }}>
@@ -221,8 +221,8 @@ export default function InsightsScreen() {
                 </Text>
               </View>
             </View>
-            <AnimatedNumber value={data.revenue} format={money} className="mt-2 text-5xl font-black tracking-tight text-mist" />
-            <Text className="mt-1 text-xs text-mist-faint">vs. the previous {data.days} days</Text>
+            <AnimatedNumber value={data.revenue} format={money} className="mt-2 text-5xl font-black tracking-tight text-ink" />
+            <Text className="mt-1 text-xs text-ink-faint">vs. the previous {data.days} days</Text>
 
             <View className="mt-6 flex-row items-end">
               {data.buckets.map((b, i) => (
@@ -245,19 +245,19 @@ export default function InsightsScreen() {
         </Animated.View>
 
         <View className="mt-3 flex-row gap-3">
-          <Animated.View entering={FadeInDown.delay(100).springify()} className="flex-1 rounded-3xl border border-white/5 bg-ink-800/80 p-4">
-            <Text className="text-xs text-mist-faint">Show-up rate</Text>
-            <AnimatedNumber value={data.showRate * 100} format={(n) => `${Math.round(n)}%`} className="mt-1 text-2xl font-black text-mist" />
+          <Animated.View entering={FadeInDown.delay(100).springify()} className="flex-1 rounded-3xl border border-line bg-surface p-4">
+            <Text className="text-xs text-ink-faint">Show-up rate</Text>
+            <AnimatedNumber value={data.showRate * 100} format={(n) => `${Math.round(n)}%`} className="mt-1 text-2xl font-black text-ink" />
           </Animated.View>
-          <Animated.View entering={FadeInDown.delay(160).springify()} className="flex-1 rounded-3xl border border-white/5 bg-ink-800/80 p-4">
-            <Text className="text-xs text-mist-faint">Avg. ticket</Text>
-            <AnimatedNumber value={data.avgTicket} format={money} className="mt-1 text-2xl font-black text-mist" />
+          <Animated.View entering={FadeInDown.delay(160).springify()} className="flex-1 rounded-3xl border border-line bg-surface p-4">
+            <Text className="text-xs text-ink-faint">Avg. ticket</Text>
+            <AnimatedNumber value={data.avgTicket} format={money} className="mt-1 text-2xl font-black text-ink" />
           </Animated.View>
         </View>
 
-        <SectionHeader title="Booking outcomes" right={<Text className="text-xs text-mist-faint">{data.total} total</Text>} />
-        <View className="rounded-3xl border border-white/5 bg-ink-800/80 p-4">
-          <View className="h-3 flex-row overflow-hidden rounded-full bg-ink-600">
+        <SectionHeader title="Booking outcomes" right={<Text className="text-xs text-ink-faint">{data.total} total</Text>} />
+        <View className="rounded-3xl border border-line bg-surface p-4">
+          <View className="h-3 flex-row overflow-hidden rounded-full bg-surface-3">
             {data.statusCounts.map(({ status, count }) =>
               count ? (
                 <Animated.View
@@ -272,25 +272,25 @@ export default function InsightsScreen() {
             {data.statusCounts.map(({ status, count }) => (
               <View key={status} className="mb-2 w-1/2 flex-row items-center">
                 <View className="mr-2 h-2.5 w-2.5 rounded-full" style={{ backgroundColor: STATUS_META[status].color }} />
-                <Text className="text-sm text-mist-muted">{STATUS_META[status].label}</Text>
-                <Text className="ml-1.5 text-sm font-bold text-mist">{count}</Text>
+                <Text className="text-sm text-ink-muted">{STATUS_META[status].label}</Text>
+                <Text className="ml-1.5 text-sm font-bold text-ink">{count}</Text>
               </View>
             ))}
           </View>
         </View>
 
         <SectionHeader title="Top services" />
-        <View className="rounded-3xl border border-white/5 bg-ink-800/80 p-4">
+        <View className="rounded-3xl border border-line bg-surface p-4">
           {data.services.length === 0 ? (
-            <Text className="text-sm text-mist-faint">No bookings in this period yet.</Text>
+            <Text className="text-sm text-ink-faint">No bookings in this period yet.</Text>
           ) : (
             data.services.map((s, i) => (
               <View key={`${range}-${s.name}`} className={i ? 'mt-4' : ''}>
                 <View className="mb-2 flex-row items-center justify-between">
-                  <Text className="text-sm font-semibold text-mist">
+                  <Text className="text-sm font-semibold text-ink">
                     {s.emoji}  {s.name}
                   </Text>
-                  <Text className="text-xs text-mist-muted">
+                  <Text className="text-xs text-ink-muted">
                     {s.count} · {money(s.revenue)}
                   </Text>
                 </View>
@@ -301,22 +301,22 @@ export default function InsightsScreen() {
         </View>
 
         <SectionHeader title="Busiest hours" />
-        <View className="rounded-3xl border border-white/5 bg-ink-800/80 p-4">
+        <View className="rounded-3xl border border-line bg-surface p-4">
           <View className="flex-row gap-1">
             {data.heat.map((v, i) => (
-              <Animated.View
-                key={`${range}-${i}`}
-                entering={FadeIn.delay(i * 40)}
-                className="h-10 flex-1 rounded-md"
-                style={{ backgroundColor: palette.pink, opacity: 0.08 + (v / maxHeat) * 0.92 }}
-              />
+              <Animated.View key={`${range}-${i}`} entering={FadeIn.delay(i * 40)} className="h-10 flex-1">
+                <View
+                  className="flex-1 rounded-md"
+                  style={{ backgroundColor: palette.pink, opacity: 0.08 + (v / maxHeat) * 0.92 }}
+                />
+              </Animated.View>
             ))}
           </View>
           <View className="mt-2 flex-row justify-between">
             {data.hours
               .filter((_, i) => i % 3 === 0)
               .map((h) => (
-                <Text key={h} className="text-[10px] text-mist-faint">
+                <Text key={h} className="text-[10px] text-ink-faint">
                   {formatHour(h)}
                 </Text>
               ))}
@@ -326,10 +326,10 @@ export default function InsightsScreen() {
         <SectionHeader title="Data" />
         <View className="flex-row gap-3">
           <PressableScale
-            className="flex-1 flex-row items-center justify-center rounded-2xl bg-ink-700 py-3.5"
+            className="flex-1 flex-row items-center justify-center rounded-2xl bg-surface-2 py-3.5"
             onPress={() => confirm('Reset demo data?', 'Replaces everything with fresh sample bookings.', resetDemo)}>
-            <Ionicons name="refresh" size={16} color={palette.mist} />
-            <Text className="ml-2 font-semibold text-mist">Reset demo</Text>
+            <Ionicons name="refresh" size={16} color={palette.ink} />
+            <Text className="ml-2 font-semibold text-ink">Reset demo</Text>
           </PressableScale>
           <PressableScale
             className="flex-1 flex-row items-center justify-center rounded-2xl bg-coral/15 py-3.5"
@@ -341,7 +341,7 @@ export default function InsightsScreen() {
 
         <View className="mt-8 items-center">
           <LinearGradient colors={brandGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} className="h-1 w-10 rounded-full" />
-          <Text className="mt-2 text-xs text-mist-faint">Bookly · made with care</Text>
+          <Text className="mt-2 text-xs text-ink-faint">Bookly · made with care</Text>
         </View>
       </ScrollView>
     </View>

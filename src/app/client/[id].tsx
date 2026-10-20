@@ -38,7 +38,7 @@ function HaloAvatar({ name }: { name: string }) {
       <Animated.View style={style} className="absolute h-[116px] w-[116px]">
         <LinearGradient colors={[colors[0], 'transparent', colors[1]]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} className="flex-1 rounded-full" />
       </Animated.View>
-      <View className="h-[106px] w-[106px] items-center justify-center rounded-full bg-ink-900">
+      <View className="h-[106px] w-[106px] items-center justify-center rounded-full bg-canvas">
         <Avatar name={name} size={96} />
       </View>
     </View>
@@ -47,9 +47,9 @@ function HaloAvatar({ name }: { name: string }) {
 
 function Stat({ label, value, format, delay }: { label: string; value: number; format?: (n: number) => string; delay: number }) {
   return (
-    <Animated.View entering={FadeInDown.delay(delay).springify()} className="flex-1 items-center rounded-3xl border border-white/5 bg-ink-800/80 py-4">
-      <AnimatedNumber value={value} format={format} className="text-xl font-black text-mist" />
-      <Text className="mt-0.5 text-[11px] text-mist-faint">{label}</Text>
+    <Animated.View entering={FadeInDown.delay(delay).springify()} className="flex-1 items-center rounded-3xl border border-line bg-surface py-4">
+      <AnimatedNumber value={value} format={format} className="text-xl font-black text-ink" />
+      <Text className="mt-0.5 text-[11px] text-ink-faint">{label}</Text>
     </Animated.View>
   );
 }
@@ -64,7 +64,7 @@ export default function ClientScreen() {
 
   if (!client) {
     return (
-      <View className="flex-1 items-center justify-center bg-ink-900">
+      <View className="flex-1 items-center justify-center bg-canvas">
         <EmptyState emoji="🫥" title="Client not found" />
       </View>
     );
@@ -82,36 +82,36 @@ export default function ClientScreen() {
   const since = new Date(client.createdAt);
 
   return (
-    <View className="flex-1 bg-ink-900">
+    <View className="flex-1 bg-canvas">
       <Aurora intensity={0.7} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10, paddingBottom: insets.bottom + 32, paddingHorizontal: 20 }}>
-        <PressableScale onPress={() => router.back()} className="h-10 w-10 items-center justify-center rounded-full bg-ink-700">
-          <Ionicons name="chevron-down" size={22} color={palette.mist} />
+        <PressableScale onPress={() => router.back()} className="h-10 w-10 items-center justify-center rounded-full bg-surface-2">
+          <Ionicons name="chevron-down" size={22} color={palette.ink} />
         </PressableScale>
 
         <View className="mt-2 items-center">
           <Animated.View entering={FadeInDown.springify().damping(12)}>
             <HaloAvatar name={client.name} />
           </Animated.View>
-          <Animated.Text entering={FadeInDown.delay(80).springify()} className="mt-4 text-[28px] font-black tracking-tight text-mist">
+          <Animated.Text entering={FadeInDown.delay(80).springify()} className="mt-4 text-[28px] font-black tracking-tight text-ink">
             {client.name}
           </Animated.Text>
-          <Animated.Text entering={FadeInDown.delay(120).springify()} className="mt-1 text-sm text-mist-muted">
+          <Animated.Text entering={FadeInDown.delay(120).springify()} className="mt-1 text-sm text-ink-muted">
             Client since {monthShort(since)} {since.getFullYear()}
           </Animated.Text>
           <Animated.View entering={FadeInDown.delay(160).springify()} className="mt-3 flex-row flex-wrap justify-center gap-2">
             {client.phone ? (
-              <View className="flex-row items-center rounded-full bg-ink-700 px-3 py-1.5">
-                <Ionicons name="call-outline" size={13} color={palette.muted} />
-                <Text className="ml-1.5 text-xs text-mist">{client.phone}</Text>
+              <View className="flex-row items-center rounded-full bg-surface-2 px-3 py-1.5">
+                <Ionicons name="call-outline" size={13} color={palette.inkMuted} />
+                <Text className="ml-1.5 text-xs text-ink">{client.phone}</Text>
               </View>
             ) : null}
             {client.email ? (
-              <View className="flex-row items-center rounded-full bg-ink-700 px-3 py-1.5">
-                <Ionicons name="mail-outline" size={13} color={palette.muted} />
-                <Text className="ml-1.5 text-xs text-mist">{client.email}</Text>
+              <View className="flex-row items-center rounded-full bg-surface-2 px-3 py-1.5">
+                <Ionicons name="mail-outline" size={13} color={palette.inkMuted} />
+                <Text className="ml-1.5 text-xs text-ink">{client.email}</Text>
               </View>
             ) : null}
           </Animated.View>
@@ -144,7 +144,7 @@ export default function ClientScreen() {
           </PressableScale>
         </Animated.View>
 
-        <Text className="mb-3 mt-8 text-lg font-extrabold tracking-tight text-mist">History</Text>
+        <Text className="mb-3 mt-8 text-lg font-extrabold tracking-tight text-ink">History</Text>
         {history.length === 0 ? (
           <EmptyState emoji="🌱" title="No visits yet" subtitle="Their story starts with the first booking." />
         ) : (

@@ -60,8 +60,8 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
               params: { date: dayKey(day), time: `${String(h).padStart(2, '0')}:00` },
             });
           }}>
-          <Text className="w-[52px] -translate-y-2 text-[11px] font-semibold text-mist-faint">{formatHour(h)}</Text>
-          <View className="flex-1 border-t border-white/5" />
+          <Text className="w-[52px] -translate-y-2 text-[11px] font-semibold text-ink-faint">{formatHour(h)}</Text>
+          <View className="flex-1 border-t border-line" />
         </Pressable>
       ))}
 
@@ -88,13 +88,13 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
                 router.push({ pathname: '/booking/[id]', params: { id: b.id } });
               }}>
               <View className="flex-row items-center justify-between">
-                <Text numberOfLines={1} className={`flex-1 text-[13px] font-bold ${done ? 'text-mist-muted' : 'text-mist'}`}>
+                <Text numberOfLines={1} className={`flex-1 text-[13px] font-bold ${done ? 'text-ink-muted' : 'text-ink'}`}>
                   {b.service.emoji} {b.client.name}
                 </Text>
-                {compact && <Text className="ml-2 text-[11px] text-mist-muted">{formatTime(b.startDate)}</Text>}
+                {compact && <Text className="ml-2 text-[11px] text-ink-muted">{formatTime(b.startDate)}</Text>}
               </View>
               {!compact && (
-                <Text className="mt-0.5 text-[11px] text-mist-muted">
+                <Text className="mt-0.5 text-[11px] text-ink-muted">
                   {b.service.name} · {formatTime(b.startDate)} – {formatTime(b.endDate)}
                 </Text>
               )}

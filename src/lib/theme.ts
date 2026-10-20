@@ -1,34 +1,41 @@
-import { DarkTheme, type Theme } from 'expo-router';
+import { DefaultTheme, type Theme } from 'expo-router';
 
 /** Raw palette for places that can't take a className (SVG, gradients, icons) */
 export const palette = {
-  ink950: '#06060B',
-  ink900: '#0B0B14',
-  ink800: '#12121E',
-  ink700: '#1A1A29',
-  ink600: '#252538',
-  ink500: '#34344C',
-  mist: '#F4F2FF',
-  muted: '#A3A1BF',
-  faint: '#64627F',
+  canvas: '#FFFFFF',
+  surface: '#F6F5FB',
+  surface2: '#EEECF6',
+  surface3: '#E3E0EE',
+  line: '#ECEAF3',
+  lineStrong: '#D4D0E2',
+  ink: '#16141F',
+  inkMuted: '#6E6A85',
+  inkFaint: '#A6A3B8',
+  violet: '#7C3AED',
+  pink: '#DB2777',
+  amber: '#D97706',
+  mint: '#059669',
+  sky: '#0284C7',
+  coral: '#E11D48',
+} as const;
+
+/** Vivid brand colours, used for gradients and decoration rather than text */
+export const brand = {
   violet: '#8B5CF6',
   pink: '#EC4899',
   amber: '#F59E0B',
-  mint: '#34D399',
-  sky: '#38BDF8',
-  coral: '#FB7185',
 } as const;
 
-export const brandGradient = [palette.violet, palette.pink, palette.amber] as const;
+export const brandGradient = [brand.violet, brand.pink, brand.amber] as const;
 
 export const navTheme: Theme = {
-  ...DarkTheme,
+  ...DefaultTheme,
   colors: {
-    ...DarkTheme.colors,
+    ...DefaultTheme.colors,
     primary: palette.violet,
-    background: palette.ink900,
-    card: palette.ink800,
-    text: palette.mist,
-    border: palette.ink600,
+    background: palette.canvas,
+    card: palette.canvas,
+    text: palette.ink,
+    border: palette.line,
   },
 };

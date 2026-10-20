@@ -16,7 +16,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { haptic } from '@/lib/haptics';
-import { brandGradient, palette } from '@/lib/theme';
+import { brand, brandGradient, palette } from '@/lib/theme';
 
 type TabBarProps = Parameters<NonNullable<React.ComponentProps<typeof Tabs>['tabBar']>>[0];
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -42,7 +42,7 @@ function TabIcon({ name, focused }: { name: string; focused: boolean }) {
   const [outline, solid] = ICONS[name] ?? ['ellipse-outline', 'ellipse'];
   return (
     <Animated.View style={style}>
-      <Ionicons name={focused ? solid : outline} size={23} color={focused ? palette.mist : palette.faint} />
+      <Ionicons name={focused ? solid : outline} size={23} color={focused ? palette.ink : palette.inkFaint} />
     </Animated.View>
   );
 }
@@ -73,7 +73,7 @@ function Fab() {
       className="-mt-8 items-center justify-center">
       <Animated.View
         className="absolute h-16 w-16 rounded-full"
-        style={[{ backgroundColor: palette.pink }, glowStyle]}
+        style={[{ backgroundColor: brand.pink }, glowStyle]}
       />
       <LinearGradient
         colors={brandGradient}
@@ -82,7 +82,7 @@ function Fab() {
         className="h-16 w-16 items-center justify-center rounded-full"
         style={{
           shadowColor: palette.pink,
-          shadowOpacity: 0.6,
+          shadowOpacity: 0.45,
           shadowRadius: 16,
           shadowOffset: { width: 0, height: 6 },
           elevation: 12,
@@ -136,15 +136,22 @@ export function TabBar({ state, navigation }: TabBarProps) {
       className="absolute left-0 right-0 px-5"
       style={{ bottom: Math.max(insets.bottom, 12) }}>
       <Background
-        {...(Platform.OS === 'ios' ? { intensity: 40, tint: 'dark' as const } : {})}
-        className="h-[68px] overflow-visible rounded-full border border-white/10"
-        style={{ backgroundColor: Platform.OS === 'ios' ? 'rgba(18,18,30,0.55)' : 'rgba(18,18,30,0.96)' }}>
+        {...(Platform.OS === 'ios' ? { intensity: 50, tint: 'light' as const } : {})}
+        className="h-[68px] overflow-visible rounded-full border border-line"
+        style={{
+          backgroundColor: Platform.OS === 'ios' ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.98)',
+          shadowColor: '#2A1B5C',
+          shadowOpacity: 0.12,
+          shadowRadius: 24,
+          shadowOffset: { width: 0, height: 10 },
+          elevation: 14,
+        }}>
         <View className="h-full flex-row items-center" onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
           {width > 0 && (
             <Animated.View
               className="absolute items-center justify-center"
               style={[{ width: slot, height: '100%' }, indicatorStyle]}>
-              <View className="h-11 w-11 rounded-full bg-white/10" />
+              <View className="h-11 w-11 rounded-full bg-violet/10" />
               <View className="absolute bottom-2 h-1 w-1 rounded-full" style={{ backgroundColor: palette.pink }} />
             </Animated.View>
           )}

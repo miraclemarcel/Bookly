@@ -30,24 +30,24 @@ type Sort = 'recent' | 'spend' | 'az';
 function SearchField({ value, onChangeText }: { value: string; onChangeText: (t: string) => void }) {
   const focus = useSharedValue(0);
   const style = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(focus.get(), [0, 1], ['rgba(255,255,255,0.06)', palette.violet]),
+    borderColor: interpolateColor(focus.get(), [0, 1], [palette.line, palette.violet]),
     transform: [{ scale: 1 + focus.get() * 0.01 }],
   }));
   return (
-    <Animated.View style={style} className="flex-row items-center rounded-2xl border bg-ink-800 px-4">
-      <Ionicons name="search" size={18} color={palette.faint} />
+    <Animated.View style={style} className="flex-row items-center rounded-2xl border bg-surface px-4">
+      <Ionicons name="search" size={18} color={palette.inkFaint} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder="Search clients"
-        placeholderTextColor={palette.faint}
+        placeholderTextColor={palette.inkFaint}
         onFocus={() => focus.set(withTiming(1, { duration: 200 }))}
         onBlur={() => focus.set(withTiming(0, { duration: 200 }))}
-        className="ml-3 flex-1 py-3.5 text-[15px] text-mist"
+        className="ml-3 flex-1 py-3.5 text-[15px] text-ink"
       />
       {value.length > 0 && (
         <PressableScale onPress={() => onChangeText('')}>
-          <Ionicons name="close-circle" size={18} color={palette.faint} />
+          <Ionicons name="close-circle" size={18} color={palette.inkFaint} />
         </PressableScale>
       )}
     </Animated.View>
@@ -64,23 +64,23 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
     <Animated.View
       entering={FadeInDown.springify().damping(16)}
       exiting={FadeOutUp.duration(200)}
-      className="mt-4 rounded-3xl border border-violet/40 bg-ink-800 p-4">
-      <Text className="mb-3 text-sm font-bold text-mist">New client</Text>
+      className="mt-4 rounded-3xl border border-violet/40 bg-surface p-4">
+      <Text className="mb-3 text-sm font-bold text-ink">New client</Text>
       <TextInput
         autoFocus
         value={name}
         onChangeText={setName}
         placeholder="Full name"
-        placeholderTextColor={palette.faint}
-        className="mb-2 rounded-xl bg-ink-700 px-4 py-3 text-mist"
+        placeholderTextColor={palette.inkFaint}
+        className="mb-2 rounded-xl bg-surface-2 px-4 py-3 text-ink"
       />
       <TextInput
         value={phone}
         onChangeText={setPhone}
         placeholder="Phone (optional)"
         keyboardType="phone-pad"
-        placeholderTextColor={palette.faint}
-        className="rounded-xl bg-ink-700 px-4 py-3 text-mist"
+        placeholderTextColor={palette.inkFaint}
+        className="rounded-xl bg-surface-2 px-4 py-3 text-ink"
       />
       <PressableScale
         disabled={!valid}
@@ -89,8 +89,8 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
           haptic.success();
           onDone();
         }}
-        className={`mt-3 items-center rounded-xl py-3 ${valid ? 'bg-violet' : 'bg-ink-600'}`}>
-        <Text className={`font-bold ${valid ? 'text-white' : 'text-mist-faint'}`}>Save client</Text>
+        className={`mt-3 items-center rounded-xl py-3 ${valid ? 'bg-violet' : 'bg-surface-3'}`}>
+        <Text className={`font-bold ${valid ? 'text-white' : 'text-ink-faint'}`}>Save client</Text>
       </PressableScale>
     </Animated.View>
   );
@@ -137,13 +137,13 @@ export default function ClientsScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 140, paddingHorizontal: 20 }}>
         <View className="flex-row items-center justify-between">
           <View>
-            <Text className="text-[30px] font-black tracking-tight text-mist">Clients</Text>
-            <Text className="text-sm text-mist-muted">{clients.length} people who love your work</Text>
+            <Text className="text-[30px] font-black tracking-tight text-ink">Clients</Text>
+            <Text className="text-sm text-ink-muted">{clients.length} people who love your work</Text>
           </View>
           <PressableScale
             onPress={() => setAdding((a) => !a)}
-            className="h-11 w-11 items-center justify-center rounded-2xl bg-ink-700">
-            <Ionicons name={adding ? 'close' : 'person-add'} size={20} color={palette.mist} />
+            className="h-11 w-11 items-center justify-center rounded-2xl bg-surface-2">
+            <Ionicons name={adding ? 'close' : 'person-add'} size={20} color={palette.ink} />
           </PressableScale>
         </View>
 
@@ -176,13 +176,13 @@ export default function ClientsScreen() {
                 className="mb-2.5">
                 <PressableScale
                   onPress={() => router.push({ pathname: '/client/[id]', params: { id: client.id } })}
-                  className="flex-row items-center rounded-3xl border border-white/5 bg-ink-800/90 p-3.5">
+                  className="flex-row items-center rounded-3xl border border-line bg-surface p-3.5">
                   <Avatar name={client.name} size={46} />
                   <View className="ml-3.5 flex-1">
-                    <Text numberOfLines={1} className="text-[15px] font-bold text-mist">
+                    <Text numberOfLines={1} className="text-[15px] font-bold text-ink">
                       {client.name}
                     </Text>
-                    <Text numberOfLines={1} className="mt-0.5 text-xs text-mist-faint">
+                    <Text numberOfLines={1} className="mt-0.5 text-xs text-ink-faint">
                       {visits} visit{visits === 1 ? '' : 's'}
                       {next
                         ? ` · next: ${relativeDay(next)}`
@@ -191,8 +191,8 @@ export default function ClientsScreen() {
                           : ' · new'}
                     </Text>
                   </View>
-                  <Text className="mr-2 text-sm font-bold text-mist">{money(spent)}</Text>
-                  <Ionicons name="chevron-forward" size={16} color={palette.faint} />
+                  <Text className="mr-2 text-sm font-bold text-ink">{money(spent)}</Text>
+                  <Ionicons name="chevron-forward" size={16} color={palette.inkFaint} />
                 </PressableScale>
               </Animated.View>
             ))

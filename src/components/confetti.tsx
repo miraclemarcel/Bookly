@@ -9,9 +9,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { palette } from '@/lib/theme';
+import { brand, palette } from '@/lib/theme';
 
-const COLORS = [palette.violet, palette.pink, palette.amber, palette.mint, palette.sky, palette.coral, '#fff'];
+const COLORS = [brand.violet, brand.pink, brand.amber, '#34D399', '#38BDF8', '#FB7185', palette.violet];
 
 function seeded(seed: number) {
   let s = seed * 9301 + 49297;

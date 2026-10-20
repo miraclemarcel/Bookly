@@ -17,7 +17,7 @@ import { useBookingViews, useNow } from '@/hooks/use-bookings';
 import { HOUR, formatDayLong, greeting, isSameDay, relativeDay } from '@/lib/date';
 import { money } from '@/lib/format';
 import { CLOSE_HOUR, OPEN_HOUR } from '@/lib/schedule';
-import { brandGradient } from '@/lib/theme';
+import { brandGradient, palette } from '@/lib/theme';
 
 function StatTile({
   label,
@@ -35,10 +35,10 @@ function StatTile({
   return (
     <Animated.View
       entering={FadeInDown.delay(delay).springify().damping(15)}
-      className="flex-1 rounded-3xl border border-white/5 bg-ink-800/80 p-4">
-      <Ionicons name={icon} size={16} color="#A3A1BF" />
-      <AnimatedNumber value={value} format={format} className="mt-3 text-2xl font-black text-mist" />
-      <Text className="mt-0.5 text-xs text-mist-faint">{label}</Text>
+      className="flex-1 rounded-3xl border border-line bg-surface p-4">
+      <Ionicons name={icon} size={16} color={palette.inkMuted} />
+      <AnimatedNumber value={value} format={format} className="mt-3 text-2xl font-black text-ink" />
+      <Text className="mt-0.5 text-xs text-ink-faint">{label}</Text>
     </Animated.View>
   );
 }
@@ -79,8 +79,8 @@ export default function TodayScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 140, paddingHorizontal: 20 }}>
         <Animated.View entering={FadeIn.duration(600)} className="flex-row items-center justify-between">
           <View className="flex-1">
-            <Text className="text-sm font-medium text-mist-muted">{greeting(now)} 👋</Text>
-            <Text className="mt-1 text-[30px] font-black tracking-tight text-mist">{formatDayLong(now)}</Text>
+            <Text className="text-sm font-medium text-ink-muted">{greeting(now)} 👋</Text>
+            <Text className="mt-1 text-[30px] font-black tracking-tight text-ink">{formatDayLong(now)}</Text>
           </View>
           <PressableScale onPress={() => router.push('/insights')}>
             <LinearGradient
@@ -93,7 +93,7 @@ export default function TodayScreen() {
           </PressableScale>
         </Animated.View>
 
-        <Animated.Text entering={FadeIn.delay(200)} className="mt-2 text-[15px] text-mist-muted">
+        <Animated.Text entering={FadeIn.delay(200)} className="mt-2 text-[15px] text-ink-muted">
           {remaining > 0
             ? `You have ${remaining} appointment${remaining === 1 ? '' : 's'} left today.`
             : today.length > 0
@@ -113,10 +113,10 @@ export default function TodayScreen() {
           ) : (
             <Animated.View
               entering={FadeInDown.delay(150)}
-              className="items-center rounded-4xl border border-dashed border-white/10 p-6">
+              className="items-center rounded-4xl border border-dashed border-line p-6">
               <Text className="text-3xl">🌙</Text>
-              <Text className="mt-2 font-bold text-mist">Nothing on the horizon</Text>
-              <Text className="mt-1 text-center text-sm text-mist-muted">
+              <Text className="mt-2 font-bold text-ink">Nothing on the horizon</Text>
+              <Text className="mt-1 text-center text-sm text-ink-muted">
                 Tap the + button to book your next client.
               </Text>
             </Animated.View>
@@ -127,7 +127,7 @@ export default function TodayScreen() {
           title="Today's schedule"
           right={
             today.some((b) => b.status === 'confirmed') ? (
-              <Text className="text-xs text-mist-faint">Swipe → done · ← cancel</Text>
+              <Text className="text-xs text-ink-faint">Swipe → done · ← cancel</Text>
             ) : null
           }
         />
@@ -154,7 +154,7 @@ export default function TodayScreen() {
         )}
 
         {upNext && upNext.startDate.getTime() - now.getTime() > 3 * HOUR && (
-          <Text className="mt-4 text-center text-xs text-mist-faint">
+          <Text className="mt-4 text-center text-xs text-ink-faint">
             Next client is more than 3 hours away. Plenty of time for a coffee ☕
           </Text>
         )}

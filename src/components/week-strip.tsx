@@ -71,11 +71,11 @@ export function WeekStrip({ weekStart, selected, onSelect, onWeekChange, counts 
                 onSelect(d);
               }}>
               <Animated.View key={dayKey(weekStart)} entering={FadeIn.delay(i * 35)} className="items-center">
-                <Text className={`text-[11px] font-semibold uppercase ${active ? 'text-white/90' : 'text-mist-faint'}`}>
+                <Text className={`text-[11px] font-semibold uppercase ${active ? 'text-white/90' : 'text-ink-faint'}`}>
                   {weekdayShort(d)}
                 </Text>
                 <Text
-                  className={`mt-1 text-lg font-black ${active ? 'text-white' : isToday ? 'text-pink' : 'text-mist'}`}>
+                  className={`mt-1 text-lg font-black ${active ? 'text-white' : isToday ? 'text-pink' : 'text-ink'}`}>
                   {d.getDate()}
                 </Text>
                 <View className="mt-1 h-1.5 flex-row gap-0.5">

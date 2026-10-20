@@ -30,12 +30,12 @@ import { useBookingStore } from '@/store/booking-store';
 
 function InfoRow({ icon, label, value }: { icon: React.ComponentProps<typeof Ionicons>['name']; label: string; value: string }) {
   return (
-    <View className="flex-row items-center border-b border-white/5 py-3.5 last:border-b-0">
-      <View className="h-9 w-9 items-center justify-center rounded-xl bg-ink-700">
-        <Ionicons name={icon} size={17} color={palette.muted} />
+    <View className="flex-row items-center border-b border-line py-3.5 last:border-b-0">
+      <View className="h-9 w-9 items-center justify-center rounded-xl bg-surface-2">
+        <Ionicons name={icon} size={17} color={palette.inkMuted} />
       </View>
-      <Text className="ml-3 flex-1 text-sm text-mist-muted">{label}</Text>
-      <Text className="text-sm font-bold text-mist">{value}</Text>
+      <Text className="ml-3 flex-1 text-sm text-ink-muted">{label}</Text>
+      <Text className="text-sm font-bold text-ink">{value}</Text>
     </View>
   );
 }
@@ -79,10 +79,10 @@ export default function BookingDetailScreen() {
 
   if (!booking) {
     return (
-      <View className="flex-1 items-center justify-center bg-ink-900">
+      <View className="flex-1 items-center justify-center bg-canvas">
         <EmptyState emoji="👻" title="Booking not found" subtitle="It may have been deleted.">
-          <PressableScale onPress={() => router.back()} className="rounded-full bg-ink-700 px-5 py-3">
-            <Text className="font-bold text-mist">Go back</Text>
+          <PressableScale onPress={() => router.back()} className="rounded-full bg-surface-2 px-5 py-3">
+            <Text className="font-bold text-ink">Go back</Text>
           </PressableScale>
         </EmptyState>
       </View>
@@ -117,7 +117,7 @@ export default function BookingDetailScreen() {
     ]);
 
   return (
-    <View className="flex-1 bg-ink-900">
+    <View className="flex-1 bg-canvas">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}>
         <LinearGradient
           colors={service.colors}
@@ -145,21 +145,21 @@ export default function BookingDetailScreen() {
           </Animated.View>
         </LinearGradient>
 
-        <View className="-mt-5 rounded-t-4xl bg-ink-900 px-5 pt-6">
+        <View className="-mt-5 rounded-t-4xl bg-canvas px-5 pt-6">
           <Animated.View entering={FadeInDown.delay(140).springify()}>
             <PressableScale
               onPress={() => router.push({ pathname: '/client/[id]', params: { id: client.id } })}
-              className="flex-row items-center rounded-3xl border border-white/5 bg-ink-800 p-4">
+              className="flex-row items-center rounded-3xl border border-line bg-surface p-4">
               <Avatar name={client.name} size={52} />
               <View className="ml-3.5 flex-1">
-                <Text className="text-lg font-bold text-mist">{client.name}</Text>
-                <Text className="text-xs text-mist-faint">{client.phone ?? client.email ?? 'No contact info'}</Text>
+                <Text className="text-lg font-bold text-ink">{client.name}</Text>
+                <Text className="text-xs text-ink-faint">{client.phone ?? client.email ?? 'No contact info'}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={palette.faint} />
+              <Ionicons name="chevron-forward" size={18} color={palette.inkFaint} />
             </PressableScale>
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(200).springify()} className="mt-4 rounded-3xl border border-white/5 bg-ink-800 px-4">
+          <Animated.View entering={FadeInDown.delay(200).springify()} className="mt-4 rounded-3xl border border-line bg-surface px-4">
             <InfoRow icon="calendar-outline" label="Date" value={formatDayLong(booking.startDate)} />
             <InfoRow icon="time-outline" label="Time" value={`${formatTime(booking.startDate)} – ${formatTime(booking.endDate)}`} />
             <InfoRow icon="hourglass-outline" label="Duration" value={formatDuration(service.duration)} />
@@ -169,12 +169,12 @@ export default function BookingDetailScreen() {
           {booking.notes ? (
             <Animated.View entering={FadeInDown.delay(260).springify()} className="mt-4 rounded-3xl border border-amber/20 bg-amber/10 p-4">
               <Text className="text-xs font-bold uppercase tracking-wider text-amber">Note</Text>
-              <Text className="mt-1.5 text-[15px] leading-5 text-mist">{booking.notes}</Text>
+              <Text className="mt-1.5 text-[15px] leading-5 text-ink">{booking.notes}</Text>
             </Animated.View>
           ) : null}
 
           <Animated.View entering={FadeInDown.delay(320).springify()} className="mt-6">
-            <Text className="mb-3 text-xs font-bold uppercase tracking-wider text-mist-muted">Actions</Text>
+            <Text className="mb-3 text-xs font-bold uppercase tracking-wider text-ink-muted">Actions</Text>
             {booking.status === 'confirmed' ? (
               <View className="gap-3">
                 <View className="flex-row gap-3">
@@ -184,9 +184,9 @@ export default function BookingDetailScreen() {
                 </View>
                 <PressableScale
                   onPress={() => router.push({ pathname: '/booking/new', params: { rescheduleId: booking.id } })}
-                  className="flex-row items-center justify-center rounded-2xl bg-ink-700 py-4">
-                  <Ionicons name="swap-horizontal" size={18} color={palette.mist} />
-                  <Text className="ml-2 font-bold text-mist">Reschedule</Text>
+                  className="flex-row items-center justify-center rounded-2xl bg-surface-2 py-4">
+                  <Ionicons name="swap-horizontal" size={18} color={palette.ink} />
+                  <Text className="ml-2 font-bold text-ink">Reschedule</Text>
                 </PressableScale>
               </View>
             ) : (

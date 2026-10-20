@@ -5,25 +5,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        canvas: '#FFFFFF',
+        surface: {
+          DEFAULT: '#F6F5FB',
+          2: '#EEECF6',
+          3: '#E3E0EE',
+        },
+        line: {
+          DEFAULT: '#ECEAF3',
+          strong: '#D4D0E2',
+        },
         ink: {
-          950: '#06060B',
-          900: '#0B0B14',
-          800: '#12121E',
-          700: '#1A1A29',
-          600: '#252538',
-          500: '#34344C',
+          DEFAULT: '#16141F',
+          muted: '#6E6A85',
+          faint: '#A6A3B8',
         },
-        mist: {
-          DEFAULT: '#F4F2FF',
-          muted: '#A3A1BF',
-          faint: '#64627F',
-        },
-        violet: '#8B5CF6',
-        pink: '#EC4899',
-        amber: '#F59E0B',
-        mint: '#34D399',
-        sky: '#38BDF8',
-        coral: '#FB7185',
+        // Deeper accents so text stays readable on white
+        violet: '#7C3AED',
+        pink: '#DB2777',
+        amber: '#D97706',
+        mint: '#059669',
+        sky: '#0284C7',
+        coral: '#E11D48',
       },
       borderRadius: {
         '4xl': '2rem',

@@ -9,7 +9,7 @@ export default function TabsLayout() {
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: palette.ink900 },
+        sceneStyle: { backgroundColor: palette.canvas },
         animation: 'shift',
       }}>
       <Tabs.Screen name="index" options={{ title: 'Today' }} />

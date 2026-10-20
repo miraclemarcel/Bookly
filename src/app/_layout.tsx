@@ -6,7 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { IntroOverlay } from '@/components/intro-overlay';
+import { SplashOverlay } from '@/components/splash-overlay';
 import { navTheme, palette } from '@/lib/theme';
 import { useStoreHydrated } from '@/store/booking-store';
 
@@ -16,20 +16,20 @@ export default function RootLayout() {
   const hydrated = useStoreHydrated();
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: palette.ink900 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: palette.canvas }}>
       <ThemeProvider value={navTheme}>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { backgroundColor: palette.ink900 },
+            contentStyle: { backgroundColor: palette.canvas },
           }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="booking/new" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           <Stack.Screen name="booking/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           <Stack.Screen name="client/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
         </Stack>
-        <IntroOverlay ready={hydrated} />
+        <SplashOverlay ready={hydrated} />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
