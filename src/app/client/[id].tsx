@@ -28,7 +28,7 @@ function Stat({
   delay: number;
 }) {
   return (
-    <Animated.View entering={FadeInDown.delay(delay).duration(300)} className="flex-1">
+    <Animated.View entering={FadeInDown.delay(delay).duration(300)} style={{ flex: 1 }}>
       <View className="items-center rounded-2xl border border-line bg-surface px-2 py-4">
         <AnimatedNumber
           value={value}
@@ -75,7 +75,7 @@ export default function ClientScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10,
+          paddingTop: Platform.OS === 'ios' ? 18 : 10,
           paddingBottom: insets.bottom + 32,
           paddingHorizontal: 20,
         }}
@@ -88,7 +88,7 @@ export default function ClientScreen() {
         </PressableScale>
 
         <View className="mt-2 items-center">
-          <Animated.View entering={FadeInDown.duration(300)} className="items-center">
+          <Animated.View entering={FadeInDown.duration(300)} style={{ alignItems: 'center' }}>
             <Avatar name={client.name} size={88} />
             <Text className="mt-4 text-center text-[26px] font-bold text-ink">{client.name}</Text>
             <Text className="mt-1 text-sm text-ink-muted">
@@ -97,7 +97,13 @@ export default function ClientScreen() {
           </Animated.View>
           <Animated.View
             entering={FadeInDown.delay(80).duration(300)}
-            className="mt-3 flex-row flex-wrap justify-center gap-2"
+            style={{
+              marginTop: 12,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: 8,
+            }}
           >
             {client.phone ? (
               <View className="flex-row items-center rounded-full bg-surface-2 px-3 py-1.5">
@@ -137,7 +143,7 @@ export default function ClientScreen() {
           </Animated.View>
         )}
 
-        <Animated.View entering={FadeInDown.delay(280).duration(300)} className="mt-4">
+        <Animated.View entering={FadeInDown.delay(280).duration(300)} style={{ marginTop: 16 }}>
           <PressableScale
             onPress={() =>
               router.push({ pathname: '/booking/new', params: { clientId: client.id } })

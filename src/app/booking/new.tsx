@@ -263,7 +263,7 @@ function WhenStep({
       </ScrollView>
 
       {closed ? (
-        <Animated.View entering={FadeIn} className="mt-10 items-center">
+        <Animated.View entering={FadeIn} style={{ marginTop: 40, alignItems: 'center' }}>
           <Text className="text-4xl">🏖️</Text>
           <Text className="mt-2 font-bold text-ink">Closed on Sundays</Text>
         </Animated.View>
@@ -441,7 +441,10 @@ function Success({
           <Ionicons name="checkmark" size={52} color="#fff" />
         </View>
       </Animated.View>
-      <Animated.View entering={FadeInDown.delay(250).duration(300)} className="items-center">
+      <Animated.View
+        entering={FadeInDown.delay(250).duration(300)}
+        style={{ alignItems: 'center' }}
+      >
         <Text className="mt-7 text-3xl font-bold text-ink">
           {rescheduled ? 'Rescheduled!' : 'You’re booked!'}
         </Text>
@@ -451,7 +454,10 @@ function Success({
           {formatDayLong(start)} at {formatTime(start)}
         </Text>
       </Animated.View>
-      <Animated.View entering={FadeInDown.delay(400).duration(300)} className="mt-10 w-full gap-3">
+      <Animated.View
+        entering={FadeInDown.delay(400).duration(300)}
+        style={{ marginTop: 40, width: '100%', gap: 12 }}
+      >
         <PressableScale
           onPress={() => router.back()}
           className="items-center rounded-xl bg-violet py-4"
@@ -558,7 +564,7 @@ export default function NewBookingScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       className="flex-1 bg-canvas"
     >
-      <View style={{ paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10 }} className="px-5">
+      <View style={{ paddingTop: Platform.OS === 'ios' ? 18 : 10 }} className="px-5">
         <View className="flex-row items-center justify-between">
           <PressableScale
             onPress={() => router.back()}
@@ -576,7 +582,11 @@ export default function NewBookingScreen() {
             <ProgressSegment key={s} filled={i <= stepIndex} />
           ))}
         </View>
-        <Animated.View key={`t-${step}`} entering={FadeInDown.duration(300)} className="mt-6">
+        <Animated.View
+          key={`t-${step}`}
+          entering={FadeInDown.duration(300)}
+          style={{ marginTop: 24 }}
+        >
           <Text className="text-[26px] font-bold text-ink">{title}</Text>
           <Text className="mt-1 text-sm text-ink-muted">{subtitle}</Text>
         </Animated.View>

@@ -3,11 +3,10 @@ import '@/lib/interop';
 
 import { Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { SplashOverlay } from '@/components/splash-overlay';
 import { navTheme, palette } from '@/lib/theme';
@@ -16,32 +15,20 @@ import { useStoreHydrated } from '@/store/booking-store';
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync(palette.canvas);
 
-/** The status bar is transparent (edge-to-edge), so paint a solid white strip behind it */
-function StatusBarBackdrop() {
-  const insets = useSafeAreaInsets();
-  return (
-    <View
-      pointerEvents="none"
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: insets.top,
-        backgroundColor: palette.canvas,
-      }}
-    />
-  );
-}
-
 export default function RootLayout() {
   const hydrated = useStoreHydrated();
+  const insets = useSafeAreaInsets();
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: palette.canvas }}>
-      <SafeAreaProvider>
-        <ThemeProvider value={navTheme}>
-          <StatusBar style="dark" />
+      <ThemeProvider value={navTheme}>
+        {/* Dark icons on white. backgroundColor covers devices that aren't edge-to-edge. */}
+        <StatusBar barStyle="dark-content" backgroundColor={palette.canvas} />
+        {/*
+          On edge-to-edge Android the status bar is transparent, so keep every screen below it.
+          The strip it leaves is this white root view, so the bar always reads as white.
+        */}
+        <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: palette.canvas }}>
           <Stack
             screenOptions={{
               headerShown: false,
@@ -62,10 +49,9 @@ export default function RootLayout() {
               options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
             />
           </Stack>
-          <StatusBarBackdrop />
-          <SplashOverlay ready={hydrated} />
-        </ThemeProvider>
-      </SafeAreaProvider>
+        </View>
+        <SplashOverlay ready={hydrated} />
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }

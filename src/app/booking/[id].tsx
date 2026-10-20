@@ -122,7 +122,7 @@ export default function BookingDetailScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
       >
-        <View className="px-5" style={{ paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10 }}>
+        <View className="px-5" style={{ paddingTop: Platform.OS === 'ios' ? 18 : 10 }}>
           <View className="flex-row items-center justify-between">
             <PressableScale
               onPress={() => router.back()}
@@ -134,7 +134,7 @@ export default function BookingDetailScreen() {
           </View>
           <Animated.View
             entering={FadeInDown.delay(60).duration(300)}
-            className="mt-6 flex-row items-center"
+            style={{ marginTop: 24, flexDirection: 'row', alignItems: 'center' }}
           >
             <View
               className="h-16 w-16 items-center justify-center rounded-2xl"
@@ -168,43 +168,41 @@ export default function BookingDetailScreen() {
             </PressableScale>
           </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(140).duration(300)}
-            className="mt-3 rounded-2xl border border-line bg-canvas px-4 py-1"
-          >
-            <InfoRow
-              icon="calendar-outline"
-              label="Date"
-              value={formatDayLong(booking.startDate)}
-            />
-            <InfoRow
-              icon="time-outline"
-              label="Time"
-              value={`${formatTime(booking.startDate)} – ${formatTime(booking.endDate)}`}
-            />
-            <InfoRow
-              icon="hourglass-outline"
-              label="Duration"
-              value={formatDuration(service.duration)}
-            />
-            <InfoRow
-              icon="pricetag-outline"
-              label="Price"
-              value={service.price ? money(service.price) : 'Free'}
-            />
+          <Animated.View entering={FadeInDown.delay(140).duration(300)}>
+            <View className="mt-3 rounded-2xl border border-line bg-canvas px-4 py-1">
+              <InfoRow
+                icon="calendar-outline"
+                label="Date"
+                value={formatDayLong(booking.startDate)}
+              />
+              <InfoRow
+                icon="time-outline"
+                label="Time"
+                value={`${formatTime(booking.startDate)} – ${formatTime(booking.endDate)}`}
+              />
+              <InfoRow
+                icon="hourglass-outline"
+                label="Duration"
+                value={formatDuration(service.duration)}
+              />
+              <InfoRow
+                icon="pricetag-outline"
+                label="Price"
+                value={service.price ? money(service.price) : 'Free'}
+              />
+            </View>
           </Animated.View>
 
           {booking.notes ? (
-            <Animated.View
-              entering={FadeInDown.delay(180).duration(300)}
-              className="mt-3 rounded-2xl border border-amber/30 bg-amber/10 p-4"
-            >
-              <Text className="text-xs font-bold uppercase tracking-wider text-amber">Note</Text>
-              <Text className="mt-1.5 text-[15px] leading-5 text-ink">{booking.notes}</Text>
+            <Animated.View entering={FadeInDown.delay(180).duration(300)}>
+              <View className="mt-3 rounded-2xl border border-amber/30 bg-amber/10 p-4">
+                <Text className="text-xs font-bold uppercase tracking-wider text-amber">Note</Text>
+                <Text className="mt-1.5 text-[15px] leading-5 text-ink">{booking.notes}</Text>
+              </View>
             </Animated.View>
           ) : null}
 
-          <Animated.View entering={FadeInDown.delay(220).duration(300)} className="mt-6">
+          <Animated.View entering={FadeInDown.delay(220).duration(300)} style={{ marginTop: 24 }}>
             <Text className="mb-3 text-xs font-bold uppercase tracking-wider text-ink-muted">
               Actions
             </Text>
@@ -241,7 +239,7 @@ export default function BookingDetailScreen() {
                 </PressableScale>
               </View>
             ) : (
-              <Animated.View entering={FadeIn} className="flex-row gap-3">
+              <Animated.View entering={FadeIn} style={{ flexDirection: 'row', gap: 12 }}>
                 <ActionButton
                   icon="arrow-undo"
                   label="Restore"

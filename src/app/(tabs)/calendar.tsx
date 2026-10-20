@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BookingCard } from '@/components/booking-card';
 import { DayTimeline } from '@/components/day-timeline';
@@ -28,7 +27,6 @@ import { palette } from '@/lib/theme';
 type Mode = 'timeline' | 'list';
 
 export default function CalendarScreen() {
-  const insets = useSafeAreaInsets();
   const now = useNow(60_000);
   const all = useBookingViews();
   const [selected, setSelected] = useState(() => startOfDay(new Date()));
@@ -72,7 +70,7 @@ export default function CalendarScreen() {
 
   return (
     <View className="flex-1 bg-canvas">
-      <View style={{ paddingTop: insets.top + 16 }} className="border-b border-line px-5 pb-4">
+      <View style={{ paddingTop: 16 }} className="border-b border-line px-5 pb-4">
         <View className="flex-row items-center justify-between">
           <Text numberOfLines={1} className="flex-1 pr-3 text-[28px] font-bold text-ink">
             {monthName(selected)}{' '}

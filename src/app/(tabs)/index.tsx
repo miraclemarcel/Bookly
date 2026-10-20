@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedNumber } from '@/components/animated-number';
 import { BookingCard } from '@/components/booking-card';
@@ -31,7 +30,7 @@ function StatTile({
   delay: number;
 }) {
   return (
-    <Animated.View entering={FadeInDown.delay(delay).duration(350)} className="flex-1">
+    <Animated.View entering={FadeInDown.delay(delay).duration(350)} style={{ flex: 1 }}>
       <View className="rounded-2xl border border-line bg-surface p-3.5">
         <Ionicons name={icon} size={18} color={palette.violet} />
         <AnimatedNumber
@@ -50,7 +49,6 @@ function StatTile({
 }
 
 export default function TodayScreen() {
-  const insets = useSafeAreaInsets();
   const now = useNow();
   const all = useBookingViews();
 
@@ -84,14 +82,14 @@ export default function TodayScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: insets.top + 16,
+          paddingTop: 16,
           paddingBottom: 32,
           paddingHorizontal: 20,
         }}
       >
         <Animated.View
           entering={FadeIn.duration(400)}
-          className="flex-row items-center justify-between"
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <View className="flex-1 pr-3">
             <Text className="text-sm font-medium text-ink-muted">{greeting(now)} 👋</Text>

@@ -9,7 +9,6 @@ import Animated, {
   withDelay,
   withSpring,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BookingStatus } from '@/types';
 
@@ -113,7 +112,6 @@ function Card({ children, className = '' }: { children: React.ReactNode; classNa
 }
 
 export default function InsightsScreen() {
-  const insets = useSafeAreaInsets();
   const all = useBookingViews();
   const resetDemo = useBookingStore((s) => s.resetDemo);
   const clearAll = useBookingStore((s) => s.clearAll);
@@ -221,7 +219,7 @@ export default function InsightsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: insets.top + 16,
+          paddingTop: 16,
           paddingBottom: 32,
           paddingHorizontal: 20,
         }}
@@ -293,7 +291,7 @@ export default function InsightsScreen() {
         </Animated.View>
 
         <View className="mt-3 flex-row gap-3">
-          <Animated.View entering={FadeInDown.delay(80).duration(350)} className="flex-1">
+          <Animated.View entering={FadeInDown.delay(80).duration(350)} style={{ flex: 1 }}>
             <Card>
               <Text className="text-[13px] text-ink-muted">Show-up rate</Text>
               <AnimatedNumber
@@ -303,7 +301,7 @@ export default function InsightsScreen() {
               />
             </Card>
           </Animated.View>
-          <Animated.View entering={FadeInDown.delay(140).duration(350)} className="flex-1">
+          <Animated.View entering={FadeInDown.delay(140).duration(350)} style={{ flex: 1 }}>
             <Card>
               <Text className="text-[13px] text-ink-muted">Avg. ticket</Text>
               <AnimatedNumber

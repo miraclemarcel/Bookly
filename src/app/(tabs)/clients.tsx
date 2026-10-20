@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import Animated, { FadeInDown, FadeOutUp, LinearTransition } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/avatar';
 import { EmptyState } from '@/components/empty-state';
@@ -94,7 +93,6 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
 }
 
 export default function ClientsScreen() {
-  const insets = useSafeAreaInsets();
   const clients = useBookingStore((s) => s.clients);
   const views = useBookingViews();
   const [query, setQuery] = useState('');
@@ -131,7 +129,7 @@ export default function ClientsScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: insets.top + 16,
+          paddingTop: 16,
           paddingBottom: 32,
           paddingHorizontal: 20,
         }}

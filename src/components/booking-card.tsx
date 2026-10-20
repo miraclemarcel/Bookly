@@ -139,21 +139,31 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
         .damping(16)}
       exiting={FadeOutLeft.duration(250)}
       layout={LinearTransition.springify().damping(18)}
-      className="mb-3"
+      style={{ marginBottom: 12 }}
     >
       {swipeable && (
         <Animated.View
           style={[
-            { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 16 },
+            {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              borderRadius: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 24,
+            },
             trackStyle,
           ]}
-          className="flex-row items-center justify-between px-6"
         >
-          <Animated.View style={leftAction} className="flex-row items-center">
+          <Animated.View style={[{ flexDirection: 'row', alignItems: 'center' }, leftAction]}>
             <Ionicons name="checkmark-circle" size={28} color={palette.mint} />
             <Text className="ml-2 font-bold text-mint">Done</Text>
           </Animated.View>
-          <Animated.View style={rightAction} className="flex-row items-center">
+          <Animated.View style={[{ flexDirection: 'row', alignItems: 'center' }, rightAction]}>
             <Text className="mr-2 font-bold text-coral">Cancel</Text>
             <Ionicons name="close-circle" size={28} color={palette.coral} />
           </Animated.View>
@@ -163,36 +173,40 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
       <GestureDetector gesture={gesture}>
         <Animated.View style={cardStyle}>
           <View
-            className={`flex-row items-center rounded-2xl border border-line bg-canvas p-3.5 ${inactive ? 'opacity-60' : ''}`}
+            className={`flex-row rounded-2xl border border-line bg-canvas p-4 ${inactive ? 'opacity-60' : ''}`}
           >
             <View
-              className="mr-3 w-1 self-stretch rounded-full"
+              className="mr-3.5 w-1 self-stretch rounded-full"
               style={{ backgroundColor: service.colors[0] }}
             />
-            <View className="w-[78px]">
-              <Text numberOfLines={1} className="text-[15px] font-bold text-ink">
-                {formatTime(booking.startDate)}
-              </Text>
-              <Text numberOfLines={1} className="mt-0.5 text-xs text-ink-muted">
-                {showDate ?? formatDuration(service.duration)}
-              </Text>
-            </View>
-            <View className="flex-1 pr-2">
-              <Text
-                numberOfLines={1}
-                className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}
-              >
-                {client.name}
-              </Text>
-              <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
+            <View className="flex-1">
+              <View className="flex-row items-center">
+                <Text
+                  numberOfLines={1}
+                  className={`flex-1 pr-3 text-base font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}
+                >
+                  {client.name}
+                </Text>
+                <Text className="text-base font-bold text-ink">
+                  {service.price ? money(service.price) : 'Free'}
+                </Text>
+              </View>
+              <Text numberOfLines={1} className="mt-1 text-sm text-ink-muted">
                 {service.emoji} {service.name}
               </Text>
-            </View>
-            <View className="items-end">
-              <Text className="mb-1.5 text-sm font-bold text-ink">
-                {service.price ? money(service.price) : 'Free'}
-              </Text>
-              <StatusChip status={booking.status} />
+              <View className="mt-3 flex-row items-center justify-between">
+                <View className="flex-1 flex-row items-center pr-3">
+                  <Ionicons name="time-outline" size={15} color={palette.inkMuted} />
+                  <Text numberOfLines={1} className="ml-1.5 text-[13px] font-semibold text-ink">
+                    {formatTime(booking.startDate)}
+                    <Text className="font-normal text-ink-muted">
+                      {'  ·  '}
+                      {showDate ?? formatDuration(service.duration)}
+                    </Text>
+                  </Text>
+                </View>
+                <StatusChip status={booking.status} />
+              </View>
             </View>
           </View>
         </Animated.View>
