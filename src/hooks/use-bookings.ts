@@ -15,7 +15,6 @@ export interface BookingView extends Booking {
 const FALLBACK_SERVICE: Service = {
   id: 'unknown',
   name: 'Service',
-  emoji: '📌',
   duration: 60,
   price: 0,
   colors: ['#64748B', '#A3A1BF'],

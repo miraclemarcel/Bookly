@@ -12,6 +12,7 @@ import { Confetti } from '@/components/confetti';
 import { EmptyState } from '@/components/empty-state';
 import { PressableScale } from '@/components/pressable-scale';
 import { StatusChip } from '@/components/status-chip';
+import { ServiceIcon } from '@/components/service-icon';
 import { useBookingView } from '@/hooks/use-bookings';
 import { formatDayLong, formatDuration, formatTime, relativeDay } from '@/lib/date';
 import { money } from '@/lib/format';
@@ -77,7 +78,11 @@ export default function BookingDetailScreen() {
   if (!booking) {
     return (
       <View className="flex-1 items-center justify-center bg-canvas">
-        <EmptyState emoji="👻" title="Booking not found" subtitle="It may have been deleted.">
+        <EmptyState
+          icon="alert-circle-outline"
+          title="Booking not found"
+          subtitle="It may have been deleted."
+        >
           <PressableScale
             onPress={() => router.back()}
             className="rounded-xl border border-line px-5 py-3"
@@ -136,12 +141,7 @@ export default function BookingDetailScreen() {
             entering={FadeInDown.delay(60).duration(300)}
             style={{ marginTop: 24, flexDirection: 'row', alignItems: 'center' }}
           >
-            <View
-              className="h-16 w-16 items-center justify-center rounded-2xl"
-              style={{ backgroundColor: service.colors[0] + '24' }}
-            >
-              <Text style={{ fontSize: 32, lineHeight: 40 }}>{service.emoji}</Text>
-            </View>
+            <ServiceIcon service={service} size={64} />
             <View className="ml-4 flex-1">
               <Text className="text-[13px] font-semibold uppercase tracking-wider text-ink-muted">
                 {relativeDay(booking.startDate)} · {formatTime(booking.startDate)}

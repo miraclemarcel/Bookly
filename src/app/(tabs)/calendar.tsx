@@ -140,7 +140,7 @@ export default function CalendarScreen() {
       >
         {selected.getDay() === 0 && active.length === 0 ? (
           <EmptyState
-            emoji="🏖️"
+            icon="cafe-outline"
             title="Closed on Sundays"
             subtitle="The studio rests. So should you."
           />
@@ -152,7 +152,11 @@ export default function CalendarScreen() {
             </Text>
           </Animated.View>
         ) : dayBookings.length === 0 ? (
-          <EmptyState emoji="📭" title="Nothing booked" subtitle="This day is wide open.">
+          <EmptyState
+            icon="calendar-clear-outline"
+            title="Nothing booked"
+            subtitle="This day is wide open."
+          >
             <PressableScale
               onPress={() =>
                 router.push({ pathname: '/booking/new', params: { date: dayKey(selected) } })

@@ -2,7 +2,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { AnimatedNumber } from '@/components/animated-number';
 import { BookingCard } from '@/components/booking-card';
@@ -21,16 +20,14 @@ function StatTile({
   value,
   format,
   icon,
-  delay,
 }: {
   label: string;
   value: number;
   format?: (n: number) => string;
   icon: React.ComponentProps<typeof Ionicons>['name'];
-  delay: number;
 }) {
   return (
-    <Animated.View entering={FadeInDown.delay(delay).duration(350)} style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <View className="rounded-2xl border border-line bg-surface p-3.5">
         <Ionicons name={icon} size={18} color={palette.violet} />
         <AnimatedNumber
@@ -44,7 +41,7 @@ function StatTile({
           {label}
         </Text>
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -87,12 +84,9 @@ export default function TodayScreen() {
           paddingHorizontal: 20,
         }}
       >
-        <Animated.View
-          entering={FadeIn.duration(400)}
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
-        >
+        <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-3">
-            <Text className="text-sm font-medium text-ink-muted">{greeting(now)} 👋</Text>
+            <Text className="text-sm font-medium text-ink-muted">{greeting(now)}</Text>
             <Text
               numberOfLines={1}
               adjustsFontSizeToFit
@@ -107,31 +101,24 @@ export default function TodayScreen() {
           >
             <Text className="text-lg font-bold text-white">B</Text>
           </PressableScale>
-        </Animated.View>
+        </View>
 
         <Text className="mt-2 text-[15px] leading-5 text-ink-muted">
           {remaining > 0
             ? `You have ${remaining} appointment${remaining === 1 ? '' : 's'} left today.`
             : today.length > 0
-              ? 'All wrapped up for today. Nice work ✨'
+              ? 'All wrapped up for today. Nice work.'
               : 'A clear day. Time to fill it up?'}
         </Text>
 
         <View className="mt-6 flex-row gap-3">
-          <StatTile label="Bookings" value={active.length} icon="calendar-outline" delay={100} />
-          <StatTile
-            label="Expected"
-            value={revenue}
-            format={money}
-            icon="wallet-outline"
-            delay={180}
-          />
+          <StatTile label="Bookings" value={active.length} icon="calendar-outline" />
+          <StatTile label="Expected" value={revenue} format={money} icon="wallet-outline" />
           <StatTile
             label="Free hrs"
             value={freeHours}
             format={(n) => n.toFixed(1)}
             icon="leaf-outline"
-            delay={260}
           />
         </View>
 
@@ -140,7 +127,7 @@ export default function TodayScreen() {
             <UpNextCard booking={upNext} now={now} />
           ) : (
             <EmptyState
-              emoji="🌙"
+              icon="moon-outline"
               title="Nothing on the horizon"
               subtitle="Tap the + button to book your next client."
             />
@@ -157,7 +144,7 @@ export default function TodayScreen() {
         />
         {today.length === 0 ? (
           <EmptyState
-            emoji="🪴"
+            icon="calendar-outline"
             title="No bookings today"
             subtitle="Enjoy the calm, or add one from the + button."
           />
@@ -188,7 +175,7 @@ export default function TodayScreen() {
 
         {upNext && upNext.startDate.getTime() - now.getTime() > 3 * HOUR && (
           <Text className="mt-4 text-center text-xs text-ink-muted">
-            Next client is more than 3 hours away. Plenty of time for a coffee ☕
+            Next client is more than 3 hours away. Plenty of time for a coffee.
           </Text>
         )}
       </ScrollView>

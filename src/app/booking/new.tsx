@@ -29,6 +29,7 @@ import type { Booking, Service } from '@/types';
 import { Avatar } from '@/components/avatar';
 import { Confetti } from '@/components/confetti';
 import { PressableScale } from '@/components/pressable-scale';
+import { ServiceIcon } from '@/components/service-icon';
 import { useServiceMap } from '@/hooks/use-bookings';
 import {
   addDays,
@@ -97,7 +98,7 @@ function ServiceStep({
               style={{ minHeight: 124 }}
             >
               <View className="flex-row items-start justify-between">
-                <Text style={{ fontSize: 28, lineHeight: 36 }}>{s.emoji}</Text>
+                <ServiceIcon service={s} size={44} />
                 {active && (
                   <View className="h-6 w-6 items-center justify-center rounded-full bg-violet">
                     <Ionicons name="checkmark" size={15} color="#fff" />
@@ -264,8 +265,10 @@ function WhenStep({
 
       {closed ? (
         <Animated.View entering={FadeIn} style={{ marginTop: 40, alignItems: 'center' }}>
-          <Text className="text-4xl">🏖️</Text>
-          <Text className="mt-2 font-bold text-ink">Closed on Sundays</Text>
+          <View className="h-16 w-16 items-center justify-center rounded-full bg-violet/10">
+            <Ionicons name="cafe-outline" size={30} color={palette.violet} />
+          </View>
+          <Text className="mt-3 font-bold text-ink">Closed on Sundays</Text>
         </Animated.View>
       ) : (
         <Animated.View key={day.toDateString()} entering={FadeIn.duration(250)}>
@@ -363,7 +366,7 @@ function ReviewStep({
             style={{ backgroundColor: service.colors[0] + '1F' }}
           >
             <View className="h-14 w-14 items-center justify-center rounded-full bg-canvas">
-              <Text style={{ fontSize: 28, lineHeight: 36 }}>{service.emoji}</Text>
+              <ServiceIcon service={service} size={26} bare />
             </View>
             <View className="ml-4 flex-1">
               <Text numberOfLines={1} className="text-xl font-bold text-ink">
@@ -449,7 +452,7 @@ function Success({
           {rescheduled ? 'Rescheduled!' : 'You’re booked!'}
         </Text>
         <Text className="mt-2 text-center text-[15px] leading-6 text-ink-muted">
-          {service.emoji} {service.name} with {clientName}
+          {service.name} with {clientName}
           {'\n'}
           {formatDayLong(start)} at {formatTime(start)}
         </Text>

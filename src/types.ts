@@ -3,7 +3,6 @@ export type BookingStatus = 'confirmed' | 'completed' | 'cancelled' | 'no-show';
 export interface Service {
   id: string;
   name: string;
-  emoji: string;
   /** Minutes */
   duration: number;
   price: number;

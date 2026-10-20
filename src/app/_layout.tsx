@@ -8,16 +8,15 @@ import { StatusBar, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { SplashOverlay } from '@/components/splash-overlay';
 import { navTheme, palette } from '@/lib/theme';
-import { useStoreHydrated } from '@/store/booking-store';
+import { useLaunchStore } from '@/store/launch-store';
 
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync(palette.canvas);
 
 export default function RootLayout() {
-  const hydrated = useStoreHydrated();
   const insets = useSafeAreaInsets();
+  const splashDone = useLaunchStore((s) => s.splashDone);
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: palette.canvas }}>
@@ -35,22 +34,27 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: palette.canvas },
             }}
           >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="booking/new"
-              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
-            />
-            <Stack.Screen
-              name="booking/[id]"
-              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
-            />
-            <Stack.Screen
-              name="client/[id]"
-              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
-            />
+            {/* Launch splash is its own screen; the app only mounts once it has played */}
+            <Stack.Protected guard={!splashDone}>
+              <Stack.Screen name="splash" options={{ animation: 'fade' }} />
+            </Stack.Protected>
+            <Stack.Protected guard={splashDone}>
+              <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+              <Stack.Screen
+                name="booking/new"
+                options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+              />
+              <Stack.Screen
+                name="booking/[id]"
+                options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+              />
+              <Stack.Screen
+                name="client/[id]"
+                options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+              />
+            </Stack.Protected>
           </Stack>
         </View>
-        <SplashOverlay ready={hydrated} />
       </ThemeProvider>
     </GestureHandlerRootView>
   );

@@ -8,7 +8,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-cut',
     name: 'Signature Cut',
-    emoji: '✂️',
     duration: 45,
     price: 65,
     colors: ['#8B5CF6', '#EC4899'],
@@ -16,7 +15,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-color',
     name: 'Color Studio',
-    emoji: '🎨',
     duration: 120,
     price: 180,
     colors: ['#F59E0B', '#FB7185'],
@@ -24,7 +22,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-beard',
     name: 'Beard Sculpt',
-    emoji: '🧔',
     duration: 30,
     price: 35,
     colors: ['#34D399', '#38BDF8'],
@@ -32,7 +29,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-spa',
     name: 'Scalp Spa',
-    emoji: '🌿',
     duration: 60,
     price: 90,
     colors: ['#10B981', '#84CC16'],
@@ -40,7 +36,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-style',
     name: 'Event Styling',
-    emoji: '✨',
     duration: 90,
     price: 140,
     colors: ['#38BDF8', '#8B5CF6'],
@@ -48,7 +43,6 @@ export const DEFAULT_SERVICES: Service[] = [
   {
     id: 'svc-consult',
     name: 'Consultation',
-    emoji: '💬',
     duration: 30,
     price: 0,
     colors: ['#64748B', '#A3A1BF'],
@@ -73,7 +67,7 @@ const CLIENT_NAMES = [
 const NOTES = [
   'Prefers quiet appointments',
   'Allergic to lavender products',
-  'Usually runs 5 min late ☕',
+  'Usually runs 5 min late',
   'Bring reference photos',
   undefined,
   undefined,

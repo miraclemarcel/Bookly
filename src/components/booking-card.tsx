@@ -4,9 +4,6 @@ import { Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
-  FadeInDown,
-  FadeOutLeft,
-  LinearTransition,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -24,6 +21,7 @@ import { palette } from '@/lib/theme';
 import { useBookingStore } from '@/store/booking-store';
 
 import { StatusChip } from './status-chip';
+import { ServiceIcon } from './service-icon';
 
 const THRESHOLD = 90;
 
@@ -33,7 +31,7 @@ interface Props {
   showDate?: string;
 }
 
-export function BookingCard({ booking, index = 0, showDate }: Props) {
+export function BookingCard({ booking, showDate }: Props) {
   const setStatus = useBookingStore((s) => s.setStatus);
   const swipeable = booking.status === 'confirmed';
   const inactive = booking.status === 'cancelled' || booking.status === 'no-show';
@@ -133,14 +131,8 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
   const { service, client } = booking;
 
   return (
-    <Animated.View
-      entering={FadeInDown.delay(Math.min(index, 8) * 70)
-        .springify()
-        .damping(16)}
-      exiting={FadeOutLeft.duration(250)}
-      layout={LinearTransition.springify().damping(18)}
-      style={{ marginBottom: 12 }}
-    >
+    // Plain View on purpose: entering/layout animations on list items misplace them on Android
+    <View style={{ marginBottom: 12 }}>
       {swipeable && (
         <Animated.View
           style={[
@@ -191,9 +183,12 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
                   {service.price ? money(service.price) : 'Free'}
                 </Text>
               </View>
-              <Text numberOfLines={1} className="mt-1 text-sm text-ink-muted">
-                {service.emoji} {service.name}
-              </Text>
+              <View className="mt-1 flex-row items-center">
+                <ServiceIcon service={service} size={15} bare />
+                <Text numberOfLines={1} className="ml-1.5 flex-1 text-sm text-ink-muted">
+                  {service.name}
+                </Text>
+              </View>
               <View className="mt-3 flex-row items-center justify-between">
                 <View className="flex-1 flex-row items-center pr-3">
                   <Ionicons name="time-outline" size={15} color={palette.inkMuted} />
@@ -211,6 +206,6 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
           </View>
         </Animated.View>
       </GestureDetector>
-    </Animated.View>
+    </View>
   );
 }

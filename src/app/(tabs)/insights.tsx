@@ -16,6 +16,7 @@ import { AnimatedNumber } from '@/components/animated-number';
 import { PressableScale } from '@/components/pressable-scale';
 import { SectionHeader } from '@/components/section-header';
 import { SegmentedControl } from '@/components/segmented-control';
+import { ServiceIcon } from '@/components/service-icon';
 import { type BookingView, useBookingViews } from '@/hooks/use-bookings';
 import { DAY, addDays, formatHour, monthShort, startOfDay, weekdayShort } from '@/lib/date';
 import { money } from '@/lib/format';
@@ -152,13 +153,13 @@ export default function InsightsScreen() {
 
     const byService = new Map<
       string,
-      { name: string; emoji: string; color: string; count: number; revenue: number }
+      { id: string; name: string; color: string; count: number; revenue: number }
     >();
     for (const b of inRange) {
       if (b.status === 'cancelled') continue;
       const e = byService.get(b.serviceId) ?? {
         name: b.service.name,
-        emoji: b.service.emoji,
+        id: b.service.id,
         color: b.service.colors[0],
         count: 0,
         revenue: 0,
@@ -351,9 +352,15 @@ export default function InsightsScreen() {
             data.services.map((s, i) => (
               <View key={`${range}-${s.name}`} className={i ? 'mt-4' : ''}>
                 <View className="mb-2 flex-row items-center justify-between">
-                  <Text numberOfLines={1} className="flex-1 pr-2 text-sm font-semibold text-ink">
-                    {s.emoji} {s.name}
-                  </Text>
+                  <View className="flex-1 flex-row items-center pr-2">
+                    <ServiceIcon service={{ id: s.id, colors: [s.color, s.color] }} size={28} />
+                    <Text
+                      numberOfLines={1}
+                      className="ml-2.5 flex-1 text-sm font-semibold text-ink"
+                    >
+                      {s.name}
+                    </Text>
+                  </View>
                   <Text className="text-[13px] text-ink-muted">
                     {s.count} · {money(s.revenue)}
                   </Text>

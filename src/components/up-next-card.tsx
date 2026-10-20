@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   Easing,
-  FadeInUp,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -16,6 +15,7 @@ import { HOUR, formatCountdown, formatTime, relativeDay } from '@/lib/date';
 
 import { PressableScale } from './pressable-scale';
 import { ProgressRing } from './progress-ring';
+import { ServiceIcon } from './service-icon';
 
 function LiveDot() {
   const t = useSharedValue(0);
@@ -56,7 +56,7 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
     : formatCountdown(msUntil).replace('in ', '');
 
   return (
-    <Animated.View entering={FadeInUp.delay(100).duration(350)}>
+    <View>
       <PressableScale
         onPress={() => router.push({ pathname: '/booking/[id]', params: { id: booking.id } })}
         className="rounded-3xl bg-violet p-5"
@@ -73,9 +73,12 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
             <Text numberOfLines={1} className="text-2xl font-bold text-white">
               {booking.client.name}
             </Text>
-            <Text numberOfLines={1} className="mt-1 text-[15px] text-white">
-              {booking.service.emoji} {booking.service.name}
-            </Text>
+            <View className="mt-1 flex-row items-center">
+              <ServiceIcon service={booking.service} size={16} color="#fff" bare />
+              <Text numberOfLines={1} className="ml-1.5 flex-1 text-[15px] text-white">
+                {booking.service.name}
+              </Text>
+            </View>
             <View className="mt-4 self-start rounded-full bg-white px-3 py-1.5">
               <Text className="text-[13px] font-bold text-violet">
                 {formatTime(booking.startDate)} – {formatTime(booking.endDate)}
@@ -90,6 +93,6 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
           </ProgressRing>
         </View>
       </PressableScale>
-    </Animated.View>
+    </View>
   );
 }

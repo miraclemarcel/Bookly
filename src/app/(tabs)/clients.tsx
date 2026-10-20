@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import Animated, { FadeInDown, FadeOutUp, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 
 import { Avatar } from '@/components/avatar';
 import { EmptyState } from '@/components/empty-state';
@@ -172,15 +172,14 @@ export default function ClientsScreen() {
 
         <View className="mt-5">
           {rows.length === 0 ? (
-            <EmptyState emoji="🔍" title="No one by that name" subtitle="Try a different search." />
+            <EmptyState
+              icon="search-outline"
+              title="No one by that name"
+              subtitle="Try a different search."
+            />
           ) : (
-            rows.map(({ client, visits, spent, last, next }, i) => (
-              <Animated.View
-                key={client.id}
-                entering={FadeInDown.delay(Math.min(i, 10) * 30).duration(300)}
-                layout={LinearTransition}
-                style={{ marginBottom: 10 }}
-              >
+            rows.map(({ client, visits, spent, last, next }) => (
+              <View key={client.id} style={{ marginBottom: 10 }}>
                 <PressableScale
                   onPress={() =>
                     router.push({ pathname: '/client/[id]', params: { id: client.id } })
@@ -204,7 +203,7 @@ export default function ClientsScreen() {
                   <Text className="mr-2 text-sm font-bold text-ink">{money(spent)}</Text>
                   <Ionicons name="chevron-forward" size={16} color={palette.inkFaint} />
                 </PressableScale>
-              </Animated.View>
+              </View>
             ))
           )}
         </View>

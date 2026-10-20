@@ -1,6 +1,5 @@
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   interpolate,
@@ -22,7 +21,7 @@ const IMAGE = 200;
 const CIRCLE = (IMAGE * 640) / 1024;
 
 /** Timeline, in ms */
-const T = { pulse: 120, lift: 520, text: 640, exit: 1550 };
+const T = { pulse: 200, lift: 700, text: 820, exit: 2200 };
 
 /**
  * The Bookly mark, drawn on the same 1024 canvas as assets/images/splash-icon.png
@@ -53,15 +52,19 @@ function Mark() {
   );
 }
 
-/**
- * Animated launch screen. Picks up exactly where the native splash leaves off:
- * the mark pulses once with a soft ripple, lifts while the wordmark rises in,
- * then everything fades to reveal the app.
- */
-export function SplashOverlay({ ready }: { ready: boolean }) {
-  const { height } = useWindowDimensions();
-  const [done, setDone] = useState(false);
+interface Props {
+  /** Shift so the mark sits at the window's centre, where the native splash drew it */
+  offsetY?: number;
+  /** Called once the animation has fully played out */
+  onFinish: () => void;
+}
 
+/**
+ * Full-screen launch animation. Picks up exactly where the native splash leaves off:
+ * the mark pulses once with a soft ripple, lifts while the wordmark rises in,
+ * then everything fades away.
+ */
+export function LaunchSplash({ offsetY = 0, onFinish }: Props) {
   const pulse = useSharedValue(1);
   const ripple = useSharedValue(0);
   const lift = useSharedValue(0);
@@ -69,9 +72,6 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
   const exit = useSharedValue(0);
 
   useEffect(() => {
-    if (!ready) return;
-    SplashScreen.hide();
-
     pulse.set(
       withDelay(
         T.pulse,
@@ -89,17 +89,19 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
     exit.set(
       withDelay(
         T.exit,
-        withTiming(1, { duration: 380, easing: Easing.in(Easing.quad) }, (finished) => {
-          if (finished) scheduleOnRN(setDone, true);
+        withTiming(1, { duration: 400, easing: Easing.in(Easing.quad) }, (finished) => {
+          if (finished) scheduleOnRN(onFinish);
         }),
       ),
     );
-  }, [ready, pulse, ripple, lift, text, exit]);
+    // Runs once; onFinish is read when the animation completes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const markStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: interpolate(lift.get(), [0, 1], [0, -44]) },
-      { scale: pulse.get() * interpolate(lift.get(), [0, 1], [1, 0.82]) * (1 + exit.get() * 0.12) },
+      { scale: pulse.get() * interpolate(lift.get(), [0, 1], [1, 0.82]) * (1 + exit.get() * 0.1) },
     ],
   }));
 
@@ -113,34 +115,37 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
     transform: [{ translateY: interpolate(text.get(), [0, 1], [14, 0]) }],
   }));
 
-  const containerStyle = useAnimatedStyle(() => ({ opacity: 1 - exit.get() }));
-
-  if (done) return null;
+  const contentStyle = useAnimatedStyle(() => ({ opacity: 1 - exit.get() }));
 
   return (
-    <Animated.View
-      pointerEvents={ready ? 'none' : 'auto'}
-      style={[StyleSheet.absoluteFill, styles.container, containerStyle]}
-    >
-      {ready && (
-        <>
-          <Animated.View style={[styles.ripple, rippleStyle]} />
-          <Animated.View style={markStyle}>
-            <Mark />
-          </Animated.View>
-          <Animated.View style={[styles.textWrap, { top: height / 2 + 26 }, textStyle]}>
-            <Animated.Text style={styles.word}>Bookly</Animated.Text>
-            <Animated.Text style={styles.tagline}>Your calendar, beautifully kept.</Animated.Text>
-          </Animated.View>
-        </>
-      )}
-    </Animated.View>
+    <View style={styles.screen}>
+      <Animated.View
+        style={[styles.center, { transform: [{ translateY: offsetY }] }, contentStyle]}
+      >
+        <Animated.View style={[styles.ripple, rippleStyle]} />
+        <Animated.View style={markStyle}>
+          <Mark />
+        </Animated.View>
+        <Animated.View style={[styles.textWrap, textStyle]}>
+          <Animated.Text style={styles.word}>Bookly</Animated.Text>
+          <Animated.Text style={styles.tagline}>Your calendar, beautifully kept.</Animated.Text>
+        </Animated.View>
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
+    flex: 1,
     backgroundColor: palette.canvas,
+  },
+  center: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -154,8 +159,10 @@ const styles = StyleSheet.create({
   },
   textWrap: {
     position: 'absolute',
+    top: '50%',
     left: 0,
     right: 0,
+    marginTop: 26,
     alignItems: 'center',
   },
   word: {

@@ -1,24 +1,30 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+
+import { palette } from '@/lib/theme';
+
+import type { IconName } from './service-icon';
 
 interface Props {
-  emoji: string;
+  icon: IconName;
   title: string;
   subtitle?: string;
   children?: React.ReactNode;
 }
 
-export function EmptyState({ emoji, title, subtitle, children }: Props) {
+export function EmptyState({ icon, title, subtitle, children }: Props) {
   return (
-    <Animated.View entering={FadeIn.duration(300)}>
+    <View>
       <View className="items-center rounded-2xl border border-line bg-surface px-6 py-10">
-        <Text style={{ fontSize: 44, lineHeight: 54 }}>{emoji}</Text>
-        <Text className="mt-3 text-center text-lg font-bold text-ink">{title}</Text>
+        <View className="h-16 w-16 items-center justify-center rounded-full bg-violet/10">
+          <Ionicons name={icon} size={30} color={palette.violet} />
+        </View>
+        <Text className="mt-4 text-center text-lg font-bold text-ink">{title}</Text>
         {subtitle ? (
           <Text className="mt-1.5 text-center text-sm leading-5 text-ink-muted">{subtitle}</Text>
         ) : null}
         {children ? <View className="mt-5">{children}</View> : null}
       </View>
-    </Animated.View>
+    </View>
   );
 }

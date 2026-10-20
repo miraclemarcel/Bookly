@@ -1,9 +1,9 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   Easing,
-  FadeInRight,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -16,6 +16,7 @@ import { dayKey, formatHour, formatTime, isSameDay } from '@/lib/date';
 import { haptic } from '@/lib/haptics';
 import { CLOSE_HOUR, OPEN_HOUR } from '@/lib/schedule';
 import { palette } from '@/lib/theme';
+import { ServiceIcon } from './service-icon';
 
 const HOUR_HEIGHT = 76;
 const GUTTER = 52;
@@ -99,16 +100,15 @@ export function DayTimeline({
         </Pressable>
       ))}
 
-      {visible.map((b, i) => {
+      {visible.map((b) => {
         const startMin = b.startDate.getHours() * 60 + b.startDate.getMinutes();
         const top = ((startMin - OPEN_HOUR * 60) / 60) * HOUR_HEIGHT;
         const height = Math.max(34, (b.service.duration / 60) * HOUR_HEIGHT - 4);
         const done = b.status !== 'confirmed';
         const compact = height < 56;
         return (
-          <Animated.View
+          <View
             key={b.id}
-            entering={FadeInRight.delay(i * 40).duration(300)}
             style={{ position: 'absolute', right: 0, top: top + 2, height, left: GUTTER + 6 }}
           >
             <Pressable
@@ -123,11 +123,12 @@ export function DayTimeline({
               }}
             >
               <View className="flex-row items-center justify-between">
+                <ServiceIcon service={b.service} size={13} bare />
                 <Text
                   numberOfLines={1}
-                  className={`flex-1 text-[13px] font-bold ${done ? 'text-ink-muted' : 'text-ink'}`}
+                  className={`ml-1.5 flex-1 text-[13px] font-bold ${done ? 'text-ink-muted' : 'text-ink'}`}
                 >
-                  {b.service.emoji} {b.client.name}
+                  {b.client.name}
                 </Text>
                 {compact && (
                   <Text className="ml-2 text-[11px] text-ink-muted">{formatTime(b.startDate)}</Text>
@@ -139,12 +140,15 @@ export function DayTimeline({
                 </Text>
               )}
               {b.status === 'completed' && !compact && (
-                <Text className="mt-1 text-[11px] font-semibold" style={{ color: palette.mint }}>
-                  ✓ Completed
-                </Text>
+                <View className="mt-1 flex-row items-center">
+                  <Ionicons name="checkmark-circle" size={12} color={palette.mint} />
+                  <Text className="ml-1 text-[11px] font-semibold" style={{ color: palette.mint }}>
+                    Completed
+                  </Text>
+                </View>
               )}
             </Pressable>
-          </Animated.View>
+          </View>
         );
       })}
 

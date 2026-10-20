@@ -10,6 +10,7 @@ import { Avatar } from '@/components/avatar';
 import { BookingCard } from '@/components/booking-card';
 import { EmptyState } from '@/components/empty-state';
 import { PressableScale } from '@/components/pressable-scale';
+import { ServiceIcon } from '@/components/service-icon';
 import { useBookingViews } from '@/hooks/use-bookings';
 import { monthShort, relativeDay } from '@/lib/date';
 import { money } from '@/lib/format';
@@ -54,7 +55,7 @@ export default function ClientScreen() {
   if (!client) {
     return (
       <View className="flex-1 items-center justify-center bg-canvas">
-        <EmptyState emoji="🫥" title="Client not found" />
+        <EmptyState icon="person-outline" title="Client not found" />
       </View>
     );
   }
@@ -132,7 +133,9 @@ export default function ClientScreen() {
               className="mt-3 flex-row items-center rounded-2xl p-4"
               style={{ backgroundColor: favorite.colors[0] + '1F' }}
             >
-              <Text style={{ fontSize: 28, lineHeight: 36 }}>{favorite.emoji}</Text>
+              <View className="h-11 w-11 items-center justify-center rounded-full bg-canvas">
+                <ServiceIcon service={favorite} size={22} bare />
+              </View>
               <View className="ml-3 flex-1">
                 <Text className="text-xs font-bold uppercase tracking-wider text-ink-muted">
                   Usual order
@@ -160,7 +163,7 @@ export default function ClientScreen() {
         <Text className="mb-3 mt-8 text-lg font-bold text-ink">History</Text>
         {history.length === 0 ? (
           <EmptyState
-            emoji="🌱"
+            icon="time-outline"
             title="No visits yet"
             subtitle="Their story starts with the first booking."
           />
