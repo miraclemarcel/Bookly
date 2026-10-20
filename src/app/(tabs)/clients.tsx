@@ -2,18 +2,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  FadeOutUp,
-  LinearTransition,
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutUp, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Aurora } from '@/components/aurora';
 import { Avatar } from '@/components/avatar';
 import { EmptyState } from '@/components/empty-state';
 import { PressableScale } from '@/components/pressable-scale';
@@ -28,29 +19,26 @@ import { useBookingStore } from '@/store/booking-store';
 type Sort = 'recent' | 'spend' | 'az';
 
 function SearchField({ value, onChangeText }: { value: string; onChangeText: (t: string) => void }) {
-  const focus = useSharedValue(0);
-  const style = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(focus.get(), [0, 1], [palette.line, palette.violet]),
-    transform: [{ scale: 1 + focus.get() * 0.01 }],
-  }));
+  const [focused, setFocused] = useState(false);
   return (
-    <Animated.View style={style} className="flex-row items-center rounded-2xl border bg-surface px-4">
+    <View
+      className={`flex-row items-center rounded-xl border bg-surface px-4 ${focused ? 'border-violet' : 'border-line'}`}>
       <Ionicons name="search" size={18} color={palette.inkFaint} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder="Search clients"
         placeholderTextColor={palette.inkFaint}
-        onFocus={() => focus.set(withTiming(1, { duration: 200 }))}
-        onBlur={() => focus.set(withTiming(0, { duration: 200 }))}
-        className="ml-3 flex-1 py-3.5 text-[15px] text-ink"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="ml-3 flex-1 py-3 text-[15px] text-ink"
       />
       {value.length > 0 && (
         <PressableScale onPress={() => onChangeText('')}>
           <Ionicons name="close-circle" size={18} color={palette.inkFaint} />
         </PressableScale>
       )}
-    </Animated.View>
+    </View>
   );
 }
 
@@ -62,17 +50,17 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
 
   return (
     <Animated.View
-      entering={FadeInDown.springify().damping(16)}
-      exiting={FadeOutUp.duration(200)}
-      className="mt-4 rounded-3xl border border-violet/40 bg-surface p-4">
-      <Text className="mb-3 text-sm font-bold text-ink">New client</Text>
+      entering={FadeInDown.duration(250)}
+      exiting={FadeOutUp.duration(200)}>
+      <View className="mt-4 rounded-2xl border border-line bg-surface p-4">
+      <Text className="mb-3 text-base font-bold text-ink">New client</Text>
       <TextInput
         autoFocus
         value={name}
         onChangeText={setName}
         placeholder="Full name"
         placeholderTextColor={palette.inkFaint}
-        className="mb-2 rounded-xl bg-surface-2 px-4 py-3 text-ink"
+        className="mb-2 rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
       />
       <TextInput
         value={phone}
@@ -80,7 +68,7 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
         placeholder="Phone (optional)"
         keyboardType="phone-pad"
         placeholderTextColor={palette.inkFaint}
-        className="rounded-xl bg-surface-2 px-4 py-3 text-ink"
+        className="rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
       />
       <PressableScale
         disabled={!valid}
@@ -90,8 +78,9 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
           onDone();
         }}
         className={`mt-3 items-center rounded-xl py-3 ${valid ? 'bg-violet' : 'bg-surface-3'}`}>
-        <Text className={`font-bold ${valid ? 'text-white' : 'text-ink-faint'}`}>Save client</Text>
+        <Text className={`font-bold ${valid ? 'text-white' : 'text-ink-muted'}`}>Save client</Text>
       </PressableScale>
+      </View>
     </Animated.View>
   );
 }
@@ -129,21 +118,20 @@ export default function ClientsScreen() {
   }, [clients, views, query, sort]);
 
   return (
-    <View className="flex-1">
-      <Aurora intensity={0.6} />
+    <View className="flex-1 bg-canvas">
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 140, paddingHorizontal: 20 }}>
+        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 20 }}>
         <View className="flex-row items-center justify-between">
-          <View>
-            <Text className="text-[30px] font-black tracking-tight text-ink">Clients</Text>
-            <Text className="text-sm text-ink-muted">{clients.length} people who love your work</Text>
+          <View className="flex-1 pr-3">
+            <Text className="text-[28px] font-bold text-ink">Clients</Text>
+            <Text className="mt-0.5 text-sm text-ink-muted">{clients.length} people who love your work</Text>
           </View>
           <PressableScale
             onPress={() => setAdding((a) => !a)}
-            className="h-11 w-11 items-center justify-center rounded-2xl bg-surface-2">
-            <Ionicons name={adding ? 'close' : 'person-add'} size={20} color={palette.ink} />
+            className={`h-11 w-11 items-center justify-center rounded-full ${adding ? 'bg-surface-2' : 'bg-violet'}`}>
+            <Ionicons name={adding ? 'close' : 'person-add'} size={19} color={adding ? palette.ink : '#fff'} />
           </PressableScale>
         </View>
 
@@ -171,18 +159,18 @@ export default function ClientsScreen() {
             rows.map(({ client, visits, spent, last, next }, i) => (
               <Animated.View
                 key={client.id}
-                entering={FadeInDown.delay(Math.min(i, 10) * 45).springify().damping(16)}
-                layout={LinearTransition.springify().damping(18)}
-                className="mb-2.5">
+                entering={FadeInDown.delay(Math.min(i, 10) * 30).duration(300)}
+                layout={LinearTransition}
+                style={{ marginBottom: 10 }}>
                 <PressableScale
                   onPress={() => router.push({ pathname: '/client/[id]', params: { id: client.id } })}
-                  className="flex-row items-center rounded-3xl border border-line bg-surface p-3.5">
-                  <Avatar name={client.name} size={46} />
+                  className="flex-row items-center rounded-2xl border border-line bg-canvas p-3.5">
+                  <Avatar name={client.name} size={44} />
                   <View className="ml-3.5 flex-1">
                     <Text numberOfLines={1} className="text-[15px] font-bold text-ink">
                       {client.name}
                     </Text>
-                    <Text numberOfLines={1} className="mt-0.5 text-xs text-ink-faint">
+                    <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
                       {visits} visit{visits === 1 ? '' : 's'}
                       {next
                         ? ` · next: ${relativeDay(next)}`

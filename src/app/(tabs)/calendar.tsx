@@ -2,10 +2,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Aurora } from '@/components/aurora';
 import { BookingCard } from '@/components/booking-card';
 import { DayTimeline } from '@/components/day-timeline';
 import { EmptyState } from '@/components/empty-state';
@@ -67,34 +66,34 @@ export default function CalendarScreen() {
   const isToday = isSameDay(selected, now);
 
   return (
-    <View className="flex-1">
-      <Aurora intensity={0.7} />
-      <View style={{ paddingTop: insets.top + 16 }} className="px-5">
+    <View className="flex-1 bg-canvas">
+      <View style={{ paddingTop: insets.top + 16 }} className="border-b border-line px-5 pb-4">
         <View className="flex-row items-center justify-between">
-          <Animated.Text
-            key={monthName(weekStart)}
-            entering={FadeInDown.springify()}
-            className="text-[30px] font-black tracking-tight text-ink">
-            {monthName(selected)} <Text className="text-ink-faint">{selected.getFullYear()}</Text>
-          </Animated.Text>
+          <Text numberOfLines={1} className="flex-1 pr-3 text-[28px] font-bold text-ink">
+            {monthName(selected)} <Text className="font-medium text-ink-faint">{selected.getFullYear()}</Text>
+          </Text>
           <View className="flex-row items-center gap-2">
             {!isToday && (
               <Animated.View entering={FadeIn}>
-                <PressableScale onPress={goToday} className="rounded-full bg-surface-2 px-3 py-2">
-                  <Text className="text-xs font-bold text-pink">Today</Text>
+                <PressableScale onPress={goToday} className="rounded-full border border-line px-3 py-2">
+                  <Text className="text-xs font-bold text-violet">Today</Text>
                 </PressableScale>
               </Animated.View>
             )}
-            <PressableScale onPress={() => changeWeek(-1)} className="h-9 w-9 items-center justify-center rounded-full bg-surface-2">
+            <PressableScale
+              onPress={() => changeWeek(-1)}
+              className="h-9 w-9 items-center justify-center rounded-full border border-line">
               <Ionicons name="chevron-back" size={18} color={palette.ink} />
             </PressableScale>
-            <PressableScale onPress={() => changeWeek(1)} className="h-9 w-9 items-center justify-center rounded-full bg-surface-2">
+            <PressableScale
+              onPress={() => changeWeek(1)}
+              className="h-9 w-9 items-center justify-center rounded-full border border-line">
               <Ionicons name="chevron-forward" size={18} color={palette.ink} />
             </PressableScale>
           </View>
         </View>
 
-        <View className="mt-4 rounded-3xl border border-line bg-surface px-1">
+        <View className="mt-4">
           <WeekStrip
             weekStart={weekStart}
             selected={selected}
@@ -104,43 +103,43 @@ export default function CalendarScreen() {
           />
         </View>
 
-        <View className="mt-5 flex-row items-end justify-between">
-          <View>
-            <Text className="text-base font-extrabold text-ink">{formatDayLong(selected)}</Text>
-            <Text className="mt-0.5 text-xs text-ink-muted">
-              {active.length} booked · {formatDuration(minutes || 0)} · {money(revenue)}
-              {cancelled ? ` · ${cancelled} cancelled` : ''}
-            </Text>
-          </View>
-          <View className="w-44">
-            <SegmentedControl
-              value={mode}
-              onChange={setMode}
-              options={[
-                { value: 'timeline', label: 'Timeline' },
-                { value: 'list', label: 'List' },
-              ]}
-            />
-          </View>
+        <View className="mt-4">
+          <Text numberOfLines={1} className="text-base font-bold text-ink">
+            {formatDayLong(selected)}
+          </Text>
+          <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
+            {active.length} booked · {formatDuration(minutes || 0)} · {money(revenue)}
+            {cancelled ? ` · ${cancelled} cancelled` : ''}
+          </Text>
+        </View>
+        <View className="mt-3">
+          <SegmentedControl
+            value={mode}
+            onChange={setMode}
+            options={[
+              { value: 'timeline', label: 'Timeline' },
+              { value: 'list', label: 'List' },
+            ]}
+          />
         </View>
       </View>
 
       <ScrollView
-        className="mt-4 flex-1"
+        className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 140, paddingTop: 8 }}>
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32, paddingTop: 16 }}>
         {selected.getDay() === 0 && active.length === 0 ? (
           <EmptyState emoji="🏖️" title="Closed on Sundays" subtitle="The studio rests. So should you." />
         ) : mode === 'timeline' ? (
           <Animated.View key={dayKey(selected)} entering={FadeIn.duration(250)}>
             <DayTimeline day={selected} bookings={dayBookings} now={now} />
-            <Text className="mt-2 text-center text-xs text-ink-faint">Tap an empty hour to book it</Text>
+            <Text className="mt-2 text-center text-xs text-ink-muted">Tap an empty hour to book it</Text>
           </Animated.View>
         ) : dayBookings.length === 0 ? (
           <EmptyState emoji="📭" title="Nothing booked" subtitle="This day is wide open.">
             <PressableScale
               onPress={() => router.push({ pathname: '/booking/new', params: { date: dayKey(selected) } })}
-              className="rounded-full bg-violet px-5 py-3">
+              className="rounded-xl bg-violet px-5 py-3">
               <Text className="font-bold text-white">Book this day</Text>
             </PressableScale>
           </EmptyState>

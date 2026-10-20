@@ -6,18 +6,12 @@ export function initials(name: string) {
   return ((parts[0]?.[0] ?? '') + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
 }
 
-const AVATAR_GRADIENTS: [string, string][] = [
-  ['#8B5CF6', '#EC4899'],
-  ['#F59E0B', '#FB7185'],
-  ['#34D399', '#38BDF8'],
-  ['#38BDF8', '#8B5CF6'],
-  ['#FB7185', '#F59E0B'],
-  ['#EC4899', '#F59E0B'],
-];
+// Deep enough for white initials to stay readable
+const AVATAR_COLORS = ['#6D28D9', '#BE185D', '#B45309', '#047857', '#0369A1', '#4338CA'];
 
-/** Stable gradient per name */
-export function avatarGradient(seed: string): [string, string] {
+/** Stable colour per name */
+export function avatarColor(seed: string): string {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
-  return AVATAR_GRADIENTS[Math.abs(hash) % AVATAR_GRADIENTS.length];
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }

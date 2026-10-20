@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
@@ -20,14 +19,14 @@ import Animated, {
 import Svg, { Path } from 'react-native-svg';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { brand, brandGradient, palette } from '@/lib/theme';
+import { palette } from '@/lib/theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const TILE = 104;
 const CHECK_LENGTH = 640; // ≈ length of the check path below, in viewBox units
 const WORD = 'Bookly'.split('');
-const ORBIT_COLORS = [brand.violet, brand.pink, brand.amber];
+const ORBIT_COLORS = [palette.violet, palette.pink, palette.amber];
 
 /** Timeline, in ms */
 const T = {
@@ -55,7 +54,7 @@ function Ripple({ delay, start }: { delay: number; start: boolean }) {
     <Animated.View
       pointerEvents="none"
       className="absolute rounded-[30px] border-2"
-      style={[{ width: TILE, height: TILE, borderColor: brand.pink }, style]}
+      style={[{ width: TILE, height: TILE, borderColor: palette.violet }, style]}
     />
   );
 }
@@ -85,7 +84,7 @@ function OrbitDot({ index, orbit, exit }: { index: number; orbit: SharedValue<nu
 
 /**
  * Animated launch screen. The native splash is plain white, so this picks up seamlessly:
- * a gradient tile pops in, a checkmark draws itself, rings ripple out, booking "dots" orbit,
+ * a brand tile pops in, a checkmark draws itself, rings ripple out, booking "dots" orbit,
  * the wordmark rises, then the tile zooms through the screen to reveal the app.
  */
 export function SplashOverlay({ ready }: { ready: boolean }) {
@@ -165,15 +164,13 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
           ))}
 
           <Animated.View style={tileStyle}>
-            <LinearGradient
-              colors={brandGradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
+            <View
               style={{
                 width: TILE,
                 height: TILE,
                 borderRadius: TILE * 0.28,
-                shadowColor: brand.pink,
+                backgroundColor: palette.violet,
+                shadowColor: palette.violet,
                 shadowOpacity: 0.35,
                 shadowRadius: 20,
                 shadowOffset: { width: 0, height: 10 },
@@ -193,7 +190,7 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
                   />
                 </Svg>
               </Animated.View>
-            </LinearGradient>
+            </View>
           </Animated.View>
 
           <Animated.View
@@ -205,7 +202,7 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
                 <Animated.Text
                   key={i}
                   entering={FadeInDown.delay(T.word + i * 60).springify().damping(11)}
-                  className="text-[40px] font-black tracking-tight text-ink">
+                  className="text-[40px] font-bold text-ink">
                   {ch}
                 </Animated.Text>
               ))}

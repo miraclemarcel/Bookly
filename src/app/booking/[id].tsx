@@ -1,17 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert, Platform, ScrollView, Text, View } from 'react-native';
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeInDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { BookingStatus } from '@/types';
@@ -30,12 +21,14 @@ import { useBookingStore } from '@/store/booking-store';
 
 function InfoRow({ icon, label, value }: { icon: React.ComponentProps<typeof Ionicons>['name']; label: string; value: string }) {
   return (
-    <View className="flex-row items-center border-b border-line py-3.5 last:border-b-0">
+    <View className="flex-row items-center py-3">
       <View className="h-9 w-9 items-center justify-center rounded-xl bg-surface-2">
         <Ionicons name={icon} size={17} color={palette.inkMuted} />
       </View>
-      <Text className="ml-3 flex-1 text-sm text-ink-muted">{label}</Text>
-      <Text className="text-sm font-bold text-ink">{value}</Text>
+      <Text className="ml-3 text-sm text-ink-muted">{label}</Text>
+      <Text numberOfLines={1} className="ml-3 flex-1 text-right text-sm font-semibold text-ink">
+        {value}
+      </Text>
     </View>
   );
 }
@@ -52,9 +45,9 @@ function ActionButton({
   onPress: () => void;
 }) {
   return (
-    <PressableScale onPress={onPress} className="flex-1 items-center rounded-2xl py-4" style={{ backgroundColor: color + '1F' }}>
+    <PressableScale onPress={onPress} className="flex-1 items-center rounded-xl py-4" style={{ backgroundColor: color + '14' }}>
       <Ionicons name={icon} size={22} color={color} />
-      <Text className="mt-1.5 text-xs font-bold" style={{ color }}>
+      <Text className="mt-1.5 text-[13px] font-bold" style={{ color }}>
         {label}
       </Text>
     </PressableScale>
@@ -69,19 +62,12 @@ export default function BookingDetailScreen() {
   const removeBooking = useBookingStore((s) => s.removeBooking);
   const [burst, setBurst] = useState(0);
 
-  const float = useSharedValue(0);
-  useEffect(() => {
-    float.set(withRepeat(withTiming(1, { duration: 2600, easing: Easing.inOut(Easing.sin) }), -1, true));
-  }, [float]);
-  const emojiStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: -12 * float.get() }, { rotate: `${-8 + 16 * float.get()}deg` }],
-  }));
 
   if (!booking) {
     return (
       <View className="flex-1 items-center justify-center bg-canvas">
         <EmptyState emoji="👻" title="Booking not found" subtitle="It may have been deleted.">
-          <PressableScale onPress={() => router.back()} className="rounded-full bg-surface-2 px-5 py-3">
+          <PressableScale onPress={() => router.back()} className="rounded-xl border border-line px-5 py-3">
             <Text className="font-bold text-ink">Go back</Text>
           </PressableScale>
         </EmptyState>
@@ -119,47 +105,45 @@ export default function BookingDetailScreen() {
   return (
     <View className="flex-1 bg-canvas">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}>
-        <LinearGradient
-          colors={service.colors}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          className="overflow-hidden px-5 pb-8"
-          style={{ paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10 }}>
-          <Animated.Text
-            style={[{ position: 'absolute', right: 10, top: 40, fontSize: 130, opacity: 0.25 }, emojiStyle]}>
-            {service.emoji}
-          </Animated.Text>
+        <View className="px-5" style={{ paddingTop: Platform.OS === 'ios' ? 18 : insets.top + 10 }}>
           <View className="flex-row items-center justify-between">
-            <PressableScale onPress={() => router.back()} className="h-10 w-10 items-center justify-center rounded-full bg-black/20">
-              <Ionicons name="chevron-down" size={22} color="#fff" />
+            <PressableScale
+              onPress={() => router.back()}
+              className="h-10 w-10 items-center justify-center rounded-full border border-line">
+              <Ionicons name="chevron-down" size={22} color={palette.ink} />
             </PressableScale>
-            <View className="rounded-full bg-black/25 px-1 py-0.5">
-              <StatusChip status={booking.status} size="md" />
-            </View>
+            <StatusChip status={booking.status} size="md" />
           </View>
-          <Animated.View entering={FadeInDown.delay(80).springify()} className="mt-10">
-            <Text className="text-sm font-bold uppercase tracking-[2px] text-white/75">
-              {relativeDay(booking.startDate)} · {formatTime(booking.startDate)}
-            </Text>
-            <Text className="mt-2 text-[34px] font-black leading-tight tracking-tight text-white">{service.name}</Text>
+          <Animated.View entering={FadeInDown.delay(60).duration(300)} className="mt-6 flex-row items-center">
+            <View
+              className="h-16 w-16 items-center justify-center rounded-2xl"
+              style={{ backgroundColor: service.colors[0] + '24' }}>
+              <Text style={{ fontSize: 32, lineHeight: 40 }}>{service.emoji}</Text>
+            </View>
+            <View className="ml-4 flex-1">
+              <Text className="text-[13px] font-semibold uppercase tracking-wider text-ink-muted">
+                {relativeDay(booking.startDate)} · {formatTime(booking.startDate)}
+              </Text>
+              <Text className="mt-1 text-[26px] font-bold leading-8 text-ink">{service.name}</Text>
+            </View>
           </Animated.View>
-        </LinearGradient>
+        </View>
 
-        <View className="-mt-5 rounded-t-4xl bg-canvas px-5 pt-6">
-          <Animated.View entering={FadeInDown.delay(140).springify()}>
+        <View className="px-5 pt-6">
+          <Animated.View entering={FadeInDown.delay(100).duration(300)}>
             <PressableScale
               onPress={() => router.push({ pathname: '/client/[id]', params: { id: client.id } })}
-              className="flex-row items-center rounded-3xl border border-line bg-surface p-4">
-              <Avatar name={client.name} size={52} />
+              className="flex-row items-center rounded-2xl border border-line bg-canvas p-4">
+              <Avatar name={client.name} size={48} />
               <View className="ml-3.5 flex-1">
                 <Text className="text-lg font-bold text-ink">{client.name}</Text>
-                <Text className="text-xs text-ink-faint">{client.phone ?? client.email ?? 'No contact info'}</Text>
+                <Text className="mt-0.5 text-[13px] text-ink-muted">{client.phone ?? client.email ?? 'No contact info'}</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={palette.inkFaint} />
             </PressableScale>
           </Animated.View>
 
-          <Animated.View entering={FadeInDown.delay(200).springify()} className="mt-4 rounded-3xl border border-line bg-surface px-4">
+          <Animated.View entering={FadeInDown.delay(140).duration(300)} className="mt-3 rounded-2xl border border-line bg-canvas px-4 py-1">
             <InfoRow icon="calendar-outline" label="Date" value={formatDayLong(booking.startDate)} />
             <InfoRow icon="time-outline" label="Time" value={`${formatTime(booking.startDate)} – ${formatTime(booking.endDate)}`} />
             <InfoRow icon="hourglass-outline" label="Duration" value={formatDuration(service.duration)} />
@@ -167,13 +151,13 @@ export default function BookingDetailScreen() {
           </Animated.View>
 
           {booking.notes ? (
-            <Animated.View entering={FadeInDown.delay(260).springify()} className="mt-4 rounded-3xl border border-amber/20 bg-amber/10 p-4">
+            <Animated.View entering={FadeInDown.delay(180).duration(300)} className="mt-3 rounded-2xl border border-amber/30 bg-amber/10 p-4">
               <Text className="text-xs font-bold uppercase tracking-wider text-amber">Note</Text>
               <Text className="mt-1.5 text-[15px] leading-5 text-ink">{booking.notes}</Text>
             </Animated.View>
           ) : null}
 
-          <Animated.View entering={FadeInDown.delay(320).springify()} className="mt-6">
+          <Animated.View entering={FadeInDown.delay(220).duration(300)} className="mt-6">
             <Text className="mb-3 text-xs font-bold uppercase tracking-wider text-ink-muted">Actions</Text>
             {booking.status === 'confirmed' ? (
               <View className="gap-3">
@@ -184,7 +168,7 @@ export default function BookingDetailScreen() {
                 </View>
                 <PressableScale
                   onPress={() => router.push({ pathname: '/booking/new', params: { rescheduleId: booking.id } })}
-                  className="flex-row items-center justify-center rounded-2xl bg-surface-2 py-4">
+                  className="flex-row items-center justify-center rounded-xl border border-line py-4">
                   <Ionicons name="swap-horizontal" size={18} color={palette.ink} />
                   <Text className="ml-2 font-bold text-ink">Reschedule</Text>
                 </PressableScale>

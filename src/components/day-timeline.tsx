@@ -34,7 +34,9 @@ function NowLine({ now }: { now: Date }) {
   return (
     <View pointerEvents="none" className="absolute right-0 flex-row items-center" style={{ top: top - 5, left: GUTTER - 5 }}>
       <View className="h-2.5 w-2.5 items-center justify-center">
-        <Animated.View className="absolute h-2.5 w-2.5 rounded-full bg-coral" style={ring} />
+        <Animated.View
+          style={[{ position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: palette.coral }, ring]}
+        />
         <View className="h-2.5 w-2.5 rounded-full bg-coral" />
       </View>
       <View className="h-[2px] flex-1 bg-coral" />
@@ -60,7 +62,9 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
               params: { date: dayKey(day), time: `${String(h).padStart(2, '0')}:00` },
             });
           }}>
-          <Text className="w-[52px] -translate-y-2 text-[11px] font-semibold text-ink-faint">{formatHour(h)}</Text>
+          <Text className="w-[52px] text-[11px] font-semibold text-ink-faint" style={{ marginTop: -7 }}>
+            {formatHour(h)}
+          </Text>
           <View className="flex-1 border-t border-line" />
         </Pressable>
       ))}
@@ -74,14 +78,13 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
         return (
           <Animated.View
             key={b.id}
-            entering={FadeInRight.delay(i * 60).springify().damping(16)}
-            className="absolute right-0"
-            style={{ top: top + 2, height, left: GUTTER + 6 }}>
+            entering={FadeInRight.delay(i * 40).duration(300)}
+            style={{ position: 'absolute', right: 0, top: top + 2, height, left: GUTTER + 6 }}>
             <Pressable
-              className="flex-1 overflow-hidden rounded-2xl border-l-4 px-3 py-2"
+              className="flex-1 overflow-hidden rounded-xl border-l-4 px-3 py-1.5"
               style={{
                 borderLeftColor: b.service.colors[0],
-                backgroundColor: b.service.colors[0] + (done ? '1A' : '33'),
+                backgroundColor: b.service.colors[0] + (done ? '14' : '24'),
               }}
               onPress={() => {
                 haptic.tap();

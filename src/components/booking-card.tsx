@@ -1,5 +1,4 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -96,7 +95,7 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
     transform: [
       { translateX: x.get() },
       { rotateZ: `${interpolate(x.get(), [-200, 0, 200], [-3, 0, 3])}deg` },
-      { scale: 1 - pressed.get() * 0.03 },
+      { scale: 1 - pressed.get() * 0.02 },
     ],
   }));
 
@@ -109,7 +108,7 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
     transform: [{ scale: interpolate(x.get(), [-THRESHOLD - 30, -THRESHOLD, 0], [1.25, 1, 0.6], Extrapolation.CLAMP) }],
   }));
   const trackStyle = useAnimatedStyle(() => ({
-    backgroundColor: x.get() > 0 ? 'rgba(5,150,105,0.12)' : 'rgba(225,29,72,0.10)',
+    backgroundColor: x.get() > 0 ? 'rgba(4,120,87,0.12)' : 'rgba(220,38,38,0.10)',
     opacity: interpolate(Math.abs(x.get()), [0, 30], [0, 1], Extrapolation.CLAMP),
   }));
 
@@ -123,8 +122,8 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
       className="mb-3">
       {swipeable && (
         <Animated.View
-          className="absolute inset-0 flex-row items-center justify-between rounded-3xl px-6"
-          style={trackStyle}>
+          style={[{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 16 }, trackStyle]}
+          className="flex-row items-center justify-between px-6">
           <Animated.View style={leftAction} className="flex-row items-center">
             <Ionicons name="checkmark-circle" size={28} color={palette.mint} />
             <Text className="ml-2 font-bold text-mint">Done</Text>
@@ -137,36 +136,34 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
       )}
 
       <GestureDetector gesture={gesture}>
-        <Animated.View
-          style={cardStyle}
-          className={`flex-row items-center rounded-3xl border border-line bg-surface p-4 ${inactive ? 'opacity-50' : ''}`}>
-          <LinearGradient
-            colors={service.colors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            className="mr-4 w-1.5 self-stretch rounded-full"
-          />
-          <View className="w-[70px]">
-            <Text className="text-[15px] font-bold text-ink">{formatTime(booking.startDate)}</Text>
-            <Text className="mt-0.5 text-xs text-ink-faint">
-              {showDate ?? formatDuration(service.duration)}
-            </Text>
-          </View>
-          <View className="flex-1 pr-2">
-            <Text
-              numberOfLines={1}
-              className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}>
-              {client.name}
-            </Text>
-            <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
-              {service.emoji}  {service.name}
-            </Text>
-          </View>
-          <View className="items-end">
-            <Text className="mb-1.5 text-sm font-bold text-ink">
-              {service.price ? money(service.price) : 'Free'}
-            </Text>
-            <StatusChip status={booking.status} />
+        <Animated.View style={cardStyle}>
+          <View
+            className={`flex-row items-center rounded-2xl border border-line bg-canvas p-3.5 ${inactive ? 'opacity-60' : ''}`}>
+            <View className="mr-3 w-1 self-stretch rounded-full" style={{ backgroundColor: service.colors[0] }} />
+            <View className="w-[78px]">
+              <Text numberOfLines={1} className="text-[15px] font-bold text-ink">
+                {formatTime(booking.startDate)}
+              </Text>
+              <Text numberOfLines={1} className="mt-0.5 text-xs text-ink-muted">
+                {showDate ?? formatDuration(service.duration)}
+              </Text>
+            </View>
+            <View className="flex-1 pr-2">
+              <Text
+                numberOfLines={1}
+                className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}>
+                {client.name}
+              </Text>
+              <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">
+                {service.emoji} {service.name}
+              </Text>
+            </View>
+            <View className="items-end">
+              <Text className="mb-1.5 text-sm font-bold text-ink">
+                {service.price ? money(service.price) : 'Free'}
+              </Text>
+              <StatusChip status={booking.status} />
+            </View>
           </View>
         </Animated.View>
       </GestureDetector>
