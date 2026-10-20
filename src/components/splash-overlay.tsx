@@ -1,249 +1,171 @@
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import Animated, {
   Easing,
-  Extrapolation,
-  FadeInDown,
-  type SharedValue,
   interpolate,
-  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withRepeat,
   withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { palette } from '@/lib/theme';
 
-const AnimatedPath = Animated.createAnimatedComponent(Path);
-
-const TILE = 104;
-const CHECK_LENGTH = 640; // ≈ length of the check path below, in viewBox units
-const WORD = 'Bookly'.split('');
-const ORBIT_COLORS = [palette.violet, palette.pink, palette.amber];
+/** Matches `imageWidth` of the expo-splash-screen plugin in app.json */
+const IMAGE = 200;
+/** The violet circle is 640/1024 of the splash image */
+const CIRCLE = (IMAGE * 640) / 1024;
 
 /** Timeline, in ms */
-const T = {
-  pop: 0,
-  check: 380,
-  rings: 300,
-  orbit: 450,
-  lift: 900,
-  word: 1000,
-  tagline: 1500,
-  exit: 2500,
-};
+const T = { pulse: 120, lift: 520, text: 640, exit: 1550 };
 
-function Ripple({ delay, start }: { delay: number; start: boolean }) {
-  const p = useSharedValue(0);
-  useEffect(() => {
-    if (!start) return;
-    p.set(
-      withDelay(
-        delay,
-        withRepeat(withTiming(1, { duration: 1600, easing: Easing.out(Easing.quad) }), 2, false),
-      ),
-    );
-  }, [p, delay, start]);
-  const style = useAnimatedStyle(() => ({
-    opacity: interpolate(p.get(), [0, 0.1, 1], [0, 0.45, 0]),
-    transform: [{ scale: interpolate(p.get(), [0, 1], [1, 2.8]) }],
-  }));
+/**
+ * The Bookly mark, drawn on the same 1024 canvas as assets/images/splash-icon.png
+ * so the handoff from the native splash is pixel-identical.
+ */
+function Mark() {
   return (
-    <Animated.View
-      pointerEvents="none"
-      className="absolute rounded-[30px] border-2"
-      style={[{ width: TILE, height: TILE, borderColor: palette.violet }, style]}
-    />
-  );
-}
-
-function OrbitDot({
-  index,
-  orbit,
-  exit,
-}: {
-  index: number;
-  orbit: SharedValue<number>;
-  exit: SharedValue<number>;
-}) {
-  const style = useAnimatedStyle(() => {
-    const angle = orbit.get() * Math.PI * 2 + (index * Math.PI * 2) / 3;
-    const radius = 84 + exit.get() * 420;
-    const shown = interpolate(orbit.get(), [0, 0.12], [0, 1], Extrapolation.CLAMP);
-    return {
-      opacity: shown * (1 - exit.get()),
-      transform: [
-        { translateX: Math.cos(angle) * radius },
-        { translateY: Math.sin(angle) * radius },
-        { scale: shown },
-      ],
-    };
-  });
-  return (
-    <Animated.View
-      pointerEvents="none"
-      className="absolute h-3.5 w-3.5 rounded-full"
-      style={[{ backgroundColor: ORBIT_COLORS[index] }, style]}
-    />
+    <Svg width={IMAGE} height={IMAGE} viewBox="0 0 1024 1024">
+      <Circle cx={512} cy={512} r={320} fill={palette.violet} />
+      {/* Glyph grid is 100 units centred on 50, scaled ×6 like the generated PNG */}
+      <G transform="translate(512 512) scale(6) translate(-50 -50)">
+        <Rect x={22} y={28} width={56} height={52} rx={9} fill="#fff" />
+        {/* Gaps that separate the binding pegs from the page */}
+        <Rect x={30.8} y={25.8} width={11.4} height={2.64} fill={palette.violet} />
+        <Rect x={57.8} y={25.8} width={11.4} height={2.64} fill={palette.violet} />
+        <Rect x={33} y={19} width={7} height={16} rx={3.5} fill="#fff" />
+        <Rect x={60} y={19} width={7} height={16} rx={3.5} fill="#fff" />
+        <Path
+          d="M36 55 L46 65 L65 45"
+          stroke={palette.violet}
+          strokeWidth={7}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      </G>
+    </Svg>
   );
 }
 
 /**
- * Animated launch screen. The native splash is plain white, so this picks up seamlessly:
- * a brand tile pops in, a checkmark draws itself, rings ripple out, booking "dots" orbit,
- * the wordmark rises, then the tile zooms through the screen to reveal the app.
+ * Animated launch screen. Picks up exactly where the native splash leaves off:
+ * the mark pulses once with a soft ripple, lifts while the wordmark rises in,
+ * then everything fades to reveal the app.
  */
 export function SplashOverlay({ ready }: { ready: boolean }) {
   const { height } = useWindowDimensions();
   const [done, setDone] = useState(false);
 
-  const pop = useSharedValue(0);
-  const check = useSharedValue(0);
-  const bump = useSharedValue(1);
-  const orbit = useSharedValue(0);
+  const pulse = useSharedValue(1);
+  const ripple = useSharedValue(0);
   const lift = useSharedValue(0);
+  const text = useSharedValue(0);
   const exit = useSharedValue(0);
-  const fade = useSharedValue(1);
 
   useEffect(() => {
     if (!ready) return;
     SplashScreen.hide();
 
-    pop.set(withDelay(T.pop, withSpring(1, { damping: 11, stiffness: 140 })));
-    check.set(
-      withDelay(T.check, withTiming(1, { duration: 520, easing: Easing.out(Easing.cubic) })),
-    );
-    // A little "confirmed!" bounce right after the check lands
-    bump.set(
+    pulse.set(
       withDelay(
-        T.check + 480,
+        T.pulse,
         withSequence(
-          withTiming(1.12, { duration: 130 }),
-          withSpring(1, { damping: 7, stiffness: 260 }),
+          withTiming(0.9, { duration: 160, easing: Easing.out(Easing.quad) }),
+          withSpring(1, { damping: 9, stiffness: 220 }),
         ),
       ),
     );
-    orbit.set(
-      withDelay(
-        T.orbit,
-        withTiming(1.6, { duration: T.exit - T.orbit + 500, easing: Easing.inOut(Easing.cubic) }),
-      ),
+    ripple.set(
+      withDelay(T.pulse + 120, withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) })),
     );
-    lift.set(withDelay(T.lift, withSpring(1, { damping: 14, stiffness: 120 })));
-    exit.set(withDelay(T.exit, withTiming(1, { duration: 600, easing: Easing.in(Easing.cubic) })));
-    fade.set(
+    lift.set(withDelay(T.lift, withSpring(1, { damping: 16, stiffness: 140 })));
+    text.set(withDelay(T.text, withTiming(1, { duration: 420, easing: Easing.out(Easing.cubic) })));
+    exit.set(
       withDelay(
-        T.exit + 380,
-        withTiming(0, { duration: 320 }, (finished) => {
+        T.exit,
+        withTiming(1, { duration: 380, easing: Easing.in(Easing.quad) }, (finished) => {
           if (finished) scheduleOnRN(setDone, true);
         }),
       ),
     );
-  }, [ready, pop, check, bump, orbit, lift, exit, fade]);
+  }, [ready, pulse, ripple, lift, text, exit]);
 
-  // Tile: pop + spin in, lift for the wordmark, then zoom through the screen on exit
-  const tileStyle = useAnimatedStyle(() => {
-    const zoom = interpolate(exit.get(), [0, 1], [1, (height / TILE) * 2.4]);
-    return {
-      transform: [
-        { translateY: interpolate(lift.get(), [0, 1], [0, -46]) * (1 - exit.get()) },
-        { scale: pop.get() * bump.get() * zoom },
-        { rotate: `${interpolate(pop.get(), [0, 1], [-120, 0])}deg` },
-      ],
-    };
-  });
-
-  const checkProps = useAnimatedProps(() => ({
-    strokeDashoffset: CHECK_LENGTH * (1 - check.get()),
+  const markStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: interpolate(lift.get(), [0, 1], [0, -44]) },
+      { scale: pulse.get() * interpolate(lift.get(), [0, 1], [1, 0.82]) * (1 + exit.get() * 0.12) },
+    ],
   }));
-  const checkFade = useAnimatedStyle(() => ({ opacity: 1 - Math.min(1, exit.get() * 3) }));
+
+  const rippleStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(ripple.get(), [0, 0.15, 1], [0, 0.35, 0]),
+    transform: [{ scale: interpolate(ripple.get(), [0, 1], [1, 1.9]) }],
+  }));
 
   const textStyle = useAnimatedStyle(() => ({
-    opacity: 1 - Math.min(1, exit.get() * 2.5),
-    transform: [{ translateY: interpolate(lift.get(), [0, 1], [24, 0]) + exit.get() * 24 }],
+    opacity: text.get(),
+    transform: [{ translateY: interpolate(text.get(), [0, 1], [14, 0]) }],
   }));
 
-  const containerStyle = useAnimatedStyle(() => ({ opacity: fade.get() }));
+  const containerStyle = useAnimatedStyle(() => ({ opacity: 1 - exit.get() }));
 
   if (done) return null;
 
   return (
     <Animated.View
-      style={[StyleSheet.absoluteFill, { backgroundColor: palette.canvas }, containerStyle]}
+      pointerEvents={ready ? 'none' : 'auto'}
+      style={[StyleSheet.absoluteFill, styles.container, containerStyle]}
     >
       {ready && (
-        <View style={StyleSheet.absoluteFill} className="items-center justify-center">
-          <Ripple delay={T.rings} start={ready} />
-          <Ripple delay={T.rings + 450} start={ready} />
-
-          {[0, 1, 2].map((i) => (
-            <OrbitDot key={i} index={i} orbit={orbit} exit={exit} />
-          ))}
-
-          <Animated.View style={tileStyle}>
-            <View
-              style={{
-                width: TILE,
-                height: TILE,
-                borderRadius: TILE * 0.28,
-                backgroundColor: palette.violet,
-                shadowColor: palette.violet,
-                shadowOpacity: 0.35,
-                shadowRadius: 20,
-                shadowOffset: { width: 0, height: 10 },
-                elevation: 10,
-              }}
-            >
-              <Animated.View style={[StyleSheet.absoluteFill, checkFade]}>
-                <Svg width={TILE} height={TILE} viewBox="0 0 1024 1024">
-                  <AnimatedPath
-                    d="M300 530 L450 680 L740 380"
-                    stroke="#fff"
-                    strokeWidth={110}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
-                    strokeDasharray={`${CHECK_LENGTH} ${CHECK_LENGTH}`}
-                    animatedProps={checkProps}
-                  />
-                </Svg>
-              </Animated.View>
-            </View>
+        <>
+          <Animated.View style={[styles.ripple, rippleStyle]} />
+          <Animated.View style={markStyle}>
+            <Mark />
           </Animated.View>
-
-          <Animated.View
-            pointerEvents="none"
-            className="absolute left-0 right-0 items-center"
-            style={[{ top: height / 2 + TILE / 2 - 46 + 22 }, textStyle]}
-          >
-            <View className="flex-row">
-              {WORD.map((ch, i) => (
-                <Animated.Text
-                  key={i}
-                  entering={FadeInDown.delay(T.word + i * 60)
-                    .springify()
-                    .damping(11)}
-                  className="text-[40px] font-bold text-ink"
-                >
-                  {ch}
-                </Animated.Text>
-              ))}
-            </View>
-            <Animated.View entering={FadeInDown.delay(T.tagline).springify()}>
-              <Text className="mt-1 text-[15px] text-ink-muted">
-                Your calendar, beautifully kept.
-              </Text>
-            </Animated.View>
+          <Animated.View style={[styles.textWrap, { top: height / 2 + 26 }, textStyle]}>
+            <Animated.Text style={styles.word}>Bookly</Animated.Text>
+            <Animated.Text style={styles.tagline}>Your calendar, beautifully kept.</Animated.Text>
           </Animated.View>
-        </View>
+        </>
       )}
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: palette.canvas,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ripple: {
+    position: 'absolute',
+    width: CIRCLE,
+    height: CIRCLE,
+    borderRadius: CIRCLE / 2,
+    borderWidth: 2,
+    borderColor: palette.violet,
+  },
+  textWrap: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  word: {
+    fontSize: 34,
+    fontWeight: '800',
+    color: palette.ink,
+  },
+  tagline: {
+    marginTop: 4,
+    fontSize: 15,
+    color: palette.inkMuted,
+  },
+});
