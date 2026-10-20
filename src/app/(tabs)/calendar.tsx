@@ -45,10 +45,15 @@ export default function CalendarScreen() {
     return map;
   }, [all]);
 
-  const dayBookings = useMemo(() => all.filter((b) => isSameDay(b.startDate, selected)), [all, selected]);
+  const dayBookings = useMemo(
+    () => all.filter((b) => isSameDay(b.startDate, selected)),
+    [all, selected],
+  );
   const active = dayBookings.filter((b) => b.status !== 'cancelled');
   const cancelled = dayBookings.length - active.length;
-  const revenue = active.filter((b) => b.status !== 'no-show').reduce((s, b) => s + b.service.price, 0);
+  const revenue = active
+    .filter((b) => b.status !== 'no-show')
+    .reduce((s, b) => s + b.service.price, 0);
   const minutes = active.reduce((s, b) => s + b.service.duration, 0);
 
   const changeWeek = (dir: 1 | -1) => {
@@ -70,24 +75,30 @@ export default function CalendarScreen() {
       <View style={{ paddingTop: insets.top + 16 }} className="border-b border-line px-5 pb-4">
         <View className="flex-row items-center justify-between">
           <Text numberOfLines={1} className="flex-1 pr-3 text-[28px] font-bold text-ink">
-            {monthName(selected)} <Text className="font-medium text-ink-faint">{selected.getFullYear()}</Text>
+            {monthName(selected)}{' '}
+            <Text className="font-medium text-ink-faint">{selected.getFullYear()}</Text>
           </Text>
           <View className="flex-row items-center gap-2">
             {!isToday && (
               <Animated.View entering={FadeIn}>
-                <PressableScale onPress={goToday} className="rounded-full border border-line px-3 py-2">
+                <PressableScale
+                  onPress={goToday}
+                  className="rounded-full border border-line px-3 py-2"
+                >
                   <Text className="text-xs font-bold text-violet">Today</Text>
                 </PressableScale>
               </Animated.View>
             )}
             <PressableScale
               onPress={() => changeWeek(-1)}
-              className="h-9 w-9 items-center justify-center rounded-full border border-line">
+              className="h-9 w-9 items-center justify-center rounded-full border border-line"
+            >
               <Ionicons name="chevron-back" size={18} color={palette.ink} />
             </PressableScale>
             <PressableScale
               onPress={() => changeWeek(1)}
-              className="h-9 w-9 items-center justify-center rounded-full border border-line">
+              className="h-9 w-9 items-center justify-center rounded-full border border-line"
+            >
               <Ionicons name="chevron-forward" size={18} color={palette.ink} />
             </PressableScale>
           </View>
@@ -127,19 +138,29 @@ export default function CalendarScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32, paddingTop: 16 }}>
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 32, paddingTop: 16 }}
+      >
         {selected.getDay() === 0 && active.length === 0 ? (
-          <EmptyState emoji="🏖️" title="Closed on Sundays" subtitle="The studio rests. So should you." />
+          <EmptyState
+            emoji="🏖️"
+            title="Closed on Sundays"
+            subtitle="The studio rests. So should you."
+          />
         ) : mode === 'timeline' ? (
           <Animated.View key={dayKey(selected)} entering={FadeIn.duration(250)}>
             <DayTimeline day={selected} bookings={dayBookings} now={now} />
-            <Text className="mt-2 text-center text-xs text-ink-muted">Tap an empty hour to book it</Text>
+            <Text className="mt-2 text-center text-xs text-ink-muted">
+              Tap an empty hour to book it
+            </Text>
           </Animated.View>
         ) : dayBookings.length === 0 ? (
           <EmptyState emoji="📭" title="Nothing booked" subtitle="This day is wide open.">
             <PressableScale
-              onPress={() => router.push({ pathname: '/booking/new', params: { date: dayKey(selected) } })}
-              className="rounded-xl bg-violet px-5 py-3">
+              onPress={() =>
+                router.push({ pathname: '/booking/new', params: { date: dayKey(selected) } })
+              }
+              className="rounded-xl bg-violet px-5 py-3"
+            >
               <Text className="font-bold text-white">Book this day</Text>
             </PressableScale>
           </EmptyState>

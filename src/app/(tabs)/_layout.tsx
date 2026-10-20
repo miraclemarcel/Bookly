@@ -11,7 +11,8 @@ export default function TabsLayout() {
         headerShown: false,
         sceneStyle: { backgroundColor: palette.canvas },
         animation: 'shift',
-      }}>
+      }}
+    >
       <Tabs.Screen name="index" options={{ title: 'Today' }} />
       <Tabs.Screen name="calendar" options={{ title: 'Calendar' }} />
       <Tabs.Screen name="clients" options={{ title: 'Clients' }} />

@@ -7,4 +7,7 @@ import Animated from 'react-native-reanimated';
 
 cssInterop(Animated.View, { className: 'style' });
 cssInterop(Animated.Text, { className: 'style' });
-cssInterop(Animated.ScrollView, { className: 'style', contentContainerClassName: 'contentContainerStyle' });
+cssInterop(Animated.ScrollView, {
+  className: 'style',
+  contentContainerClassName: 'contentContainerStyle',
+});

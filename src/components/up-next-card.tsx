@@ -20,13 +20,21 @@ import { ProgressRing } from './progress-ring';
 function LiveDot() {
   const t = useSharedValue(0);
   useEffect(() => {
-    t.set(withRepeat(withTiming(1, { duration: 1400, easing: Easing.out(Easing.quad) }), -1, false));
+    t.set(
+      withRepeat(withTiming(1, { duration: 1400, easing: Easing.out(Easing.quad) }), -1, false),
+    );
   }, [t]);
-  const ring = useAnimatedStyle(() => ({ opacity: 1 - t.get(), transform: [{ scale: 1 + t.get() * 1.6 }] }));
+  const ring = useAnimatedStyle(() => ({
+    opacity: 1 - t.get(),
+    transform: [{ scale: 1 + t.get() * 1.6 }],
+  }));
   return (
     <View className="mr-2 h-2.5 w-2.5 items-center justify-center">
       <Animated.View
-        style={[{ position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: '#fff' }, ring]}
+        style={[
+          { position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: '#fff' },
+          ring,
+        ]}
       />
       <View className="h-2.5 w-2.5 rounded-full bg-white" />
     </View>
@@ -39,7 +47,8 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
 
   // In progress → how far through the appointment; upcoming → closeness within a 2h window
   const progress = inProgress
-    ? (now.getTime() - booking.startDate.getTime()) / (booking.endDate.getTime() - booking.startDate.getTime())
+    ? (now.getTime() - booking.startDate.getTime()) /
+      (booking.endDate.getTime() - booking.startDate.getTime())
     : 1 - Math.min(1, msUntil / (2 * HOUR));
 
   const ringLabel = inProgress
@@ -50,7 +59,8 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
     <Animated.View entering={FadeInUp.delay(100).duration(350)}>
       <PressableScale
         onPress={() => router.push({ pathname: '/booking/[id]', params: { id: booking.id } })}
-        className="rounded-3xl bg-violet p-5">
+        className="rounded-3xl bg-violet p-5"
+      >
         <View className="flex-row items-center">
           {inProgress && <LiveDot />}
           <Text className="text-xs font-bold uppercase tracking-wider text-white">
@@ -74,7 +84,9 @@ export function UpNextCard({ booking, now }: { booking: BookingView; now: Date }
           </View>
           <ProgressRing progress={progress} size={84} stroke={7} track="rgba(255,255,255,0.25)">
             <Text className="text-base font-bold text-white">{ringLabel}</Text>
-            <Text className="text-[10px] font-semibold uppercase text-white">{inProgress ? 'left' : 'to go'}</Text>
+            <Text className="text-[10px] font-semibold uppercase text-white">
+              {inProgress ? 'left' : 'to go'}
+            </Text>
           </ProgressRing>
         </View>
       </PressableScale>

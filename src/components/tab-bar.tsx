@@ -25,7 +25,8 @@ function Fab() {
         haptic.bump();
         router.push('/booking/new');
       }}
-      className="h-12 w-12 items-center justify-center rounded-full bg-violet active:opacity-80">
+      className="h-12 w-12 items-center justify-center rounded-full bg-violet active:opacity-80"
+    >
       <Ionicons name="add" size={28} color="#fff" />
     </Pressable>
   );
@@ -45,12 +46,17 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
         accessibilityState={{ selected: focused }}
         className="flex-1 items-center justify-center py-2"
         onPress={() => {
-          const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
           if (!focused && !event.defaultPrevented) {
             haptic.tap();
             navigation.navigate(route.name);
           }
-        }}>
+        }}
+      >
         <Ionicons name={focused ? solid : outline} size={24} color={color} />
         <Text className="mt-1 text-[11px] font-semibold" style={{ color }}>
           {descriptors[route.key].options.title ?? route.name}
@@ -62,7 +68,8 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   return (
     <View
       className="flex-row items-center border-t border-line bg-canvas px-2"
-      style={{ paddingBottom: Math.max(insets.bottom, 8), paddingTop: 6 }}>
+      style={{ paddingBottom: Math.max(insets.bottom, 8), paddingTop: 6 }}
+    >
       {tabs[0]}
       {tabs[1]}
       <View className="flex-1 items-center justify-center">

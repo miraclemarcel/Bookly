@@ -18,11 +18,18 @@ import { useBookingStore } from '@/store/booking-store';
 
 type Sort = 'recent' | 'spend' | 'az';
 
-function SearchField({ value, onChangeText }: { value: string; onChangeText: (t: string) => void }) {
+function SearchField({
+  value,
+  onChangeText,
+}: {
+  value: string;
+  onChangeText: (t: string) => void;
+}) {
   const [focused, setFocused] = useState(false);
   return (
     <View
-      className={`flex-row items-center rounded-xl border bg-surface px-4 ${focused ? 'border-violet' : 'border-line'}`}>
+      className={`flex-row items-center rounded-xl border bg-surface px-4 ${focused ? 'border-violet' : 'border-line'}`}
+    >
       <Ionicons name="search" size={18} color={palette.inkFaint} />
       <TextInput
         value={value}
@@ -49,37 +56,38 @@ function NewClientForm({ onDone }: { onDone: () => void }) {
   const valid = name.trim().length > 1;
 
   return (
-    <Animated.View
-      entering={FadeInDown.duration(250)}
-      exiting={FadeOutUp.duration(200)}>
+    <Animated.View entering={FadeInDown.duration(250)} exiting={FadeOutUp.duration(200)}>
       <View className="mt-4 rounded-2xl border border-line bg-surface p-4">
-      <Text className="mb-3 text-base font-bold text-ink">New client</Text>
-      <TextInput
-        autoFocus
-        value={name}
-        onChangeText={setName}
-        placeholder="Full name"
-        placeholderTextColor={palette.inkFaint}
-        className="mb-2 rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
-      />
-      <TextInput
-        value={phone}
-        onChangeText={setPhone}
-        placeholder="Phone (optional)"
-        keyboardType="phone-pad"
-        placeholderTextColor={palette.inkFaint}
-        className="rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
-      />
-      <PressableScale
-        disabled={!valid}
-        onPress={() => {
-          addClient({ name: name.trim(), phone: phone.trim() || undefined });
-          haptic.success();
-          onDone();
-        }}
-        className={`mt-3 items-center rounded-xl py-3 ${valid ? 'bg-violet' : 'bg-surface-3'}`}>
-        <Text className={`font-bold ${valid ? 'text-white' : 'text-ink-muted'}`}>Save client</Text>
-      </PressableScale>
+        <Text className="mb-3 text-base font-bold text-ink">New client</Text>
+        <TextInput
+          autoFocus
+          value={name}
+          onChangeText={setName}
+          placeholder="Full name"
+          placeholderTextColor={palette.inkFaint}
+          className="mb-2 rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
+        />
+        <TextInput
+          value={phone}
+          onChangeText={setPhone}
+          placeholder="Phone (optional)"
+          keyboardType="phone-pad"
+          placeholderTextColor={palette.inkFaint}
+          className="rounded-xl border border-line bg-canvas px-4 py-3 text-[15px] text-ink"
+        />
+        <PressableScale
+          disabled={!valid}
+          onPress={() => {
+            addClient({ name: name.trim(), phone: phone.trim() || undefined });
+            haptic.success();
+            onDone();
+          }}
+          className={`mt-3 items-center rounded-xl py-3 ${valid ? 'bg-violet' : 'bg-surface-3'}`}
+        >
+          <Text className={`font-bold ${valid ? 'text-white' : 'text-ink-muted'}`}>
+            Save client
+          </Text>
+        </PressableScale>
       </View>
     </Animated.View>
   );
@@ -122,16 +130,28 @@ export default function ClientsScreen() {
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 20 }}>
+        contentContainerStyle={{
+          paddingTop: insets.top + 16,
+          paddingBottom: 32,
+          paddingHorizontal: 20,
+        }}
+      >
         <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-3">
             <Text className="text-[28px] font-bold text-ink">Clients</Text>
-            <Text className="mt-0.5 text-sm text-ink-muted">{clients.length} people who love your work</Text>
+            <Text className="mt-0.5 text-sm text-ink-muted">
+              {clients.length} people who love your work
+            </Text>
           </View>
           <PressableScale
             onPress={() => setAdding((a) => !a)}
-            className={`h-11 w-11 items-center justify-center rounded-full ${adding ? 'bg-surface-2' : 'bg-violet'}`}>
-            <Ionicons name={adding ? 'close' : 'person-add'} size={19} color={adding ? palette.ink : '#fff'} />
+            className={`h-11 w-11 items-center justify-center rounded-full ${adding ? 'bg-surface-2' : 'bg-violet'}`}
+          >
+            <Ionicons
+              name={adding ? 'close' : 'person-add'}
+              size={19}
+              color={adding ? palette.ink : '#fff'}
+            />
           </PressableScale>
         </View>
 
@@ -161,10 +181,14 @@ export default function ClientsScreen() {
                 key={client.id}
                 entering={FadeInDown.delay(Math.min(i, 10) * 30).duration(300)}
                 layout={LinearTransition}
-                style={{ marginBottom: 10 }}>
+                style={{ marginBottom: 10 }}
+              >
                 <PressableScale
-                  onPress={() => router.push({ pathname: '/client/[id]', params: { id: client.id } })}
-                  className="flex-row items-center rounded-2xl border border-line bg-canvas p-3.5">
+                  onPress={() =>
+                    router.push({ pathname: '/client/[id]', params: { id: client.id } })
+                  }
+                  className="flex-row items-center rounded-2xl border border-line bg-canvas p-3.5"
+                >
                   <Avatar name={client.name} size={44} />
                   <View className="ml-3.5 flex-1">
                     <Text numberOfLines={1} className="text-[15px] font-bold text-ink">

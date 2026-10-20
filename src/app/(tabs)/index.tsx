@@ -31,9 +31,7 @@ function StatTile({
   delay: number;
 }) {
   return (
-    <Animated.View
-      entering={FadeInDown.delay(delay).duration(350)}
-      className="flex-1">
+    <Animated.View entering={FadeInDown.delay(delay).duration(350)} className="flex-1">
       <View className="rounded-2xl border border-line bg-surface p-3.5">
         <Ionicons name={icon} size={18} color={palette.violet} />
         <AnimatedNumber
@@ -67,7 +65,9 @@ export default function TodayScreen() {
   const comingUp = useMemo(
     () =>
       all
-        .filter((b) => b.status === 'confirmed' && !isSameDay(b.startDate, now) && b.startDate > now)
+        .filter(
+          (b) => b.status === 'confirmed' && !isSameDay(b.startDate, now) && b.startDate > now,
+        )
         .slice(0, 3),
     [all, now],
   );
@@ -83,17 +83,30 @@ export default function TodayScreen() {
     <View className="flex-1 bg-canvas">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 20 }}>
-        <Animated.View entering={FadeIn.duration(400)} className="flex-row items-center justify-between">
+        contentContainerStyle={{
+          paddingTop: insets.top + 16,
+          paddingBottom: 32,
+          paddingHorizontal: 20,
+        }}
+      >
+        <Animated.View
+          entering={FadeIn.duration(400)}
+          className="flex-row items-center justify-between"
+        >
           <View className="flex-1 pr-3">
             <Text className="text-sm font-medium text-ink-muted">{greeting(now)} 👋</Text>
-            <Text numberOfLines={1} adjustsFontSizeToFit className="mt-1 text-[28px] font-bold text-ink">
+            <Text
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              className="mt-1 text-[28px] font-bold text-ink"
+            >
               {formatDayLong(now)}
             </Text>
           </View>
           <PressableScale
             onPress={() => router.push('/insights')}
-            className="h-11 w-11 items-center justify-center rounded-full bg-violet">
+            className="h-11 w-11 items-center justify-center rounded-full bg-violet"
+          >
             <Text className="text-lg font-bold text-white">B</Text>
           </PressableScale>
         </Animated.View>
@@ -108,15 +121,31 @@ export default function TodayScreen() {
 
         <View className="mt-6 flex-row gap-3">
           <StatTile label="Bookings" value={active.length} icon="calendar-outline" delay={100} />
-          <StatTile label="Expected" value={revenue} format={money} icon="wallet-outline" delay={180} />
-          <StatTile label="Free hrs" value={freeHours} format={(n) => n.toFixed(1)} icon="leaf-outline" delay={260} />
+          <StatTile
+            label="Expected"
+            value={revenue}
+            format={money}
+            icon="wallet-outline"
+            delay={180}
+          />
+          <StatTile
+            label="Free hrs"
+            value={freeHours}
+            format={(n) => n.toFixed(1)}
+            icon="leaf-outline"
+            delay={260}
+          />
         </View>
 
         <View className="mt-6">
           {upNext ? (
             <UpNextCard booking={upNext} now={now} />
           ) : (
-            <EmptyState emoji="🌙" title="Nothing on the horizon" subtitle="Tap the + button to book your next client." />
+            <EmptyState
+              emoji="🌙"
+              title="Nothing on the horizon"
+              subtitle="Tap the + button to book your next client."
+            />
           )}
         </View>
 
@@ -129,7 +158,11 @@ export default function TodayScreen() {
           }
         />
         {today.length === 0 ? (
-          <EmptyState emoji="🪴" title="No bookings today" subtitle="Enjoy the calm, or add one from the + button." />
+          <EmptyState
+            emoji="🪴"
+            title="No bookings today"
+            subtitle="Enjoy the calm, or add one from the + button."
+          />
         ) : (
           today.map((b, i) => <BookingCard key={b.id} booking={b} index={i} />)
         )}
@@ -145,7 +178,12 @@ export default function TodayScreen() {
               }
             />
             {comingUp.map((b, i) => (
-              <BookingCard key={b.id} booking={b} index={i + today.length} showDate={relativeDay(b.startDate, now)} />
+              <BookingCard
+                key={b.id}
+                booking={b}
+                index={i + today.length}
+                showDate={relativeDay(b.startDate, now)}
+              />
             ))}
           </>
         )}

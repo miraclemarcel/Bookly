@@ -10,7 +10,12 @@ interface Props extends TextProps {
 const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 /** Counts up (or down) to `value` whenever it changes */
-export function AnimatedNumber({ value, format = (n) => String(Math.round(n)), duration = 900, ...rest }: Props) {
+export function AnimatedNumber({
+  value,
+  format = (n) => String(Math.round(n)),
+  duration = 900,
+  ...rest
+}: Props) {
   const [display, setDisplay] = useState(0);
   const from = useRef(0);
 

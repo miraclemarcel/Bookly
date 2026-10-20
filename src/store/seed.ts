@@ -5,18 +5,69 @@ import { uid } from '@/lib/id';
 import { CLOSE_HOUR, OPEN_HOUR, isSlotFree } from '@/lib/schedule';
 
 export const DEFAULT_SERVICES: Service[] = [
-  { id: 'svc-cut', name: 'Signature Cut', emoji: '✂️', duration: 45, price: 65, colors: ['#8B5CF6', '#EC4899'] },
-  { id: 'svc-color', name: 'Color Studio', emoji: '🎨', duration: 120, price: 180, colors: ['#F59E0B', '#FB7185'] },
-  { id: 'svc-beard', name: 'Beard Sculpt', emoji: '🧔', duration: 30, price: 35, colors: ['#34D399', '#38BDF8'] },
-  { id: 'svc-spa', name: 'Scalp Spa', emoji: '🌿', duration: 60, price: 90, colors: ['#10B981', '#84CC16'] },
-  { id: 'svc-style', name: 'Event Styling', emoji: '✨', duration: 90, price: 140, colors: ['#38BDF8', '#8B5CF6'] },
-  { id: 'svc-consult', name: 'Consultation', emoji: '💬', duration: 30, price: 0, colors: ['#64748B', '#A3A1BF'] },
+  {
+    id: 'svc-cut',
+    name: 'Signature Cut',
+    emoji: '✂️',
+    duration: 45,
+    price: 65,
+    colors: ['#8B5CF6', '#EC4899'],
+  },
+  {
+    id: 'svc-color',
+    name: 'Color Studio',
+    emoji: '🎨',
+    duration: 120,
+    price: 180,
+    colors: ['#F59E0B', '#FB7185'],
+  },
+  {
+    id: 'svc-beard',
+    name: 'Beard Sculpt',
+    emoji: '🧔',
+    duration: 30,
+    price: 35,
+    colors: ['#34D399', '#38BDF8'],
+  },
+  {
+    id: 'svc-spa',
+    name: 'Scalp Spa',
+    emoji: '🌿',
+    duration: 60,
+    price: 90,
+    colors: ['#10B981', '#84CC16'],
+  },
+  {
+    id: 'svc-style',
+    name: 'Event Styling',
+    emoji: '✨',
+    duration: 90,
+    price: 140,
+    colors: ['#38BDF8', '#8B5CF6'],
+  },
+  {
+    id: 'svc-consult',
+    name: 'Consultation',
+    emoji: '💬',
+    duration: 30,
+    price: 0,
+    colors: ['#64748B', '#A3A1BF'],
+  },
 ];
 
 const CLIENT_NAMES = [
-  'Amara Okafor', 'Leo Brennan', 'Sofia Marquez', 'Kenji Watanabe', 'Priya Raman',
-  'Noah Fischer', 'Zara Ahmed', 'Mateo Rossi', 'Chloe Dubois', 'Ezra Mensah',
-  'Ivy Chen', 'Omar Haddad',
+  'Amara Okafor',
+  'Leo Brennan',
+  'Sofia Marquez',
+  'Kenji Watanabe',
+  'Priya Raman',
+  'Noah Fischer',
+  'Zara Ahmed',
+  'Mateo Rossi',
+  'Chloe Dubois',
+  'Ezra Mensah',
+  'Ivy Chen',
+  'Omar Haddad',
 ];
 
 const NOTES = [
@@ -39,7 +90,7 @@ function rng(seed: number) {
 
 export function createSeed(now = new Date()) {
   const rand = rng(42);
-  const pick = <T,>(arr: T[]) => arr[Math.floor(rand() * arr.length)];
+  const pick = <T>(arr: T[]) => arr[Math.floor(rand() * arr.length)];
 
   const services = DEFAULT_SERVICES;
   const serviceMap = Object.fromEntries(services.map((s) => [s.id, s]));

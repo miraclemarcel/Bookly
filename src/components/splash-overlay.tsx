@@ -44,7 +44,12 @@ function Ripple({ delay, start }: { delay: number; start: boolean }) {
   const p = useSharedValue(0);
   useEffect(() => {
     if (!start) return;
-    p.set(withDelay(delay, withRepeat(withTiming(1, { duration: 1600, easing: Easing.out(Easing.quad) }), 2, false)));
+    p.set(
+      withDelay(
+        delay,
+        withRepeat(withTiming(1, { duration: 1600, easing: Easing.out(Easing.quad) }), 2, false),
+      ),
+    );
   }, [p, delay, start]);
   const style = useAnimatedStyle(() => ({
     opacity: interpolate(p.get(), [0, 0.1, 1], [0, 0.45, 0]),
@@ -59,7 +64,15 @@ function Ripple({ delay, start }: { delay: number; start: boolean }) {
   );
 }
 
-function OrbitDot({ index, orbit, exit }: { index: number; orbit: SharedValue<number>; exit: SharedValue<number> }) {
+function OrbitDot({
+  index,
+  orbit,
+  exit,
+}: {
+  index: number;
+  orbit: SharedValue<number>;
+  exit: SharedValue<number>;
+}) {
   const style = useAnimatedStyle(() => {
     const angle = orbit.get() * Math.PI * 2 + (index * Math.PI * 2) / 3;
     const radius = 84 + exit.get() * 420;
@@ -104,15 +117,25 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
     SplashScreen.hide();
 
     pop.set(withDelay(T.pop, withSpring(1, { damping: 11, stiffness: 140 })));
-    check.set(withDelay(T.check, withTiming(1, { duration: 520, easing: Easing.out(Easing.cubic) })));
+    check.set(
+      withDelay(T.check, withTiming(1, { duration: 520, easing: Easing.out(Easing.cubic) })),
+    );
     // A little "confirmed!" bounce right after the check lands
     bump.set(
       withDelay(
         T.check + 480,
-        withSequence(withTiming(1.12, { duration: 130 }), withSpring(1, { damping: 7, stiffness: 260 })),
+        withSequence(
+          withTiming(1.12, { duration: 130 }),
+          withSpring(1, { damping: 7, stiffness: 260 }),
+        ),
       ),
     );
-    orbit.set(withDelay(T.orbit, withTiming(1.6, { duration: T.exit - T.orbit + 500, easing: Easing.inOut(Easing.cubic) })));
+    orbit.set(
+      withDelay(
+        T.orbit,
+        withTiming(1.6, { duration: T.exit - T.orbit + 500, easing: Easing.inOut(Easing.cubic) }),
+      ),
+    );
     lift.set(withDelay(T.lift, withSpring(1, { damping: 14, stiffness: 120 })));
     exit.set(withDelay(T.exit, withTiming(1, { duration: 600, easing: Easing.in(Easing.cubic) })));
     fade.set(
@@ -153,7 +176,8 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
 
   return (
     <Animated.View
-      style={[StyleSheet.absoluteFill, { backgroundColor: palette.canvas }, containerStyle]}>
+      style={[StyleSheet.absoluteFill, { backgroundColor: palette.canvas }, containerStyle]}
+    >
       {ready && (
         <View style={StyleSheet.absoluteFill} className="items-center justify-center">
           <Ripple delay={T.rings} start={ready} />
@@ -175,7 +199,8 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
                 shadowRadius: 20,
                 shadowOffset: { width: 0, height: 10 },
                 elevation: 10,
-              }}>
+              }}
+            >
               <Animated.View style={[StyleSheet.absoluteFill, checkFade]}>
                 <Svg width={TILE} height={TILE} viewBox="0 0 1024 1024">
                   <AnimatedPath
@@ -196,19 +221,25 @@ export function SplashOverlay({ ready }: { ready: boolean }) {
           <Animated.View
             pointerEvents="none"
             className="absolute left-0 right-0 items-center"
-            style={[{ top: height / 2 + TILE / 2 - 46 + 22 }, textStyle]}>
+            style={[{ top: height / 2 + TILE / 2 - 46 + 22 }, textStyle]}
+          >
             <View className="flex-row">
               {WORD.map((ch, i) => (
                 <Animated.Text
                   key={i}
-                  entering={FadeInDown.delay(T.word + i * 60).springify().damping(11)}
-                  className="text-[40px] font-bold text-ink">
+                  entering={FadeInDown.delay(T.word + i * 60)
+                    .springify()
+                    .damping(11)}
+                  className="text-[40px] font-bold text-ink"
+                >
                   {ch}
                 </Animated.Text>
               ))}
             </View>
             <Animated.View entering={FadeInDown.delay(T.tagline).springify()}>
-              <Text className="mt-1 text-[15px] text-ink-muted">Your calendar, beautifully kept.</Text>
+              <Text className="mt-1 text-[15px] text-ink-muted">
+                Your calendar, beautifully kept.
+              </Text>
             </Animated.View>
           </Animated.View>
         </View>

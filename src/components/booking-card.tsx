@@ -101,11 +101,29 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
 
   const leftAction = useAnimatedStyle(() => ({
     opacity: interpolate(x.get(), [0, 40, THRESHOLD], [0, 0.6, 1], Extrapolation.CLAMP),
-    transform: [{ scale: interpolate(x.get(), [0, THRESHOLD, THRESHOLD + 30], [0.6, 1, 1.25], Extrapolation.CLAMP) }],
+    transform: [
+      {
+        scale: interpolate(
+          x.get(),
+          [0, THRESHOLD, THRESHOLD + 30],
+          [0.6, 1, 1.25],
+          Extrapolation.CLAMP,
+        ),
+      },
+    ],
   }));
   const rightAction = useAnimatedStyle(() => ({
     opacity: interpolate(x.get(), [-THRESHOLD, -40, 0], [1, 0.6, 0], Extrapolation.CLAMP),
-    transform: [{ scale: interpolate(x.get(), [-THRESHOLD - 30, -THRESHOLD, 0], [1.25, 1, 0.6], Extrapolation.CLAMP) }],
+    transform: [
+      {
+        scale: interpolate(
+          x.get(),
+          [-THRESHOLD - 30, -THRESHOLD, 0],
+          [1.25, 1, 0.6],
+          Extrapolation.CLAMP,
+        ),
+      },
+    ],
   }));
   const trackStyle = useAnimatedStyle(() => ({
     backgroundColor: x.get() > 0 ? 'rgba(4,120,87,0.12)' : 'rgba(220,38,38,0.10)',
@@ -116,14 +134,21 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
 
   return (
     <Animated.View
-      entering={FadeInDown.delay(Math.min(index, 8) * 70).springify().damping(16)}
+      entering={FadeInDown.delay(Math.min(index, 8) * 70)
+        .springify()
+        .damping(16)}
       exiting={FadeOutLeft.duration(250)}
       layout={LinearTransition.springify().damping(18)}
-      className="mb-3">
+      className="mb-3"
+    >
       {swipeable && (
         <Animated.View
-          style={[{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 16 }, trackStyle]}
-          className="flex-row items-center justify-between px-6">
+          style={[
+            { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, borderRadius: 16 },
+            trackStyle,
+          ]}
+          className="flex-row items-center justify-between px-6"
+        >
           <Animated.View style={leftAction} className="flex-row items-center">
             <Ionicons name="checkmark-circle" size={28} color={palette.mint} />
             <Text className="ml-2 font-bold text-mint">Done</Text>
@@ -138,8 +163,12 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
       <GestureDetector gesture={gesture}>
         <Animated.View style={cardStyle}>
           <View
-            className={`flex-row items-center rounded-2xl border border-line bg-canvas p-3.5 ${inactive ? 'opacity-60' : ''}`}>
-            <View className="mr-3 w-1 self-stretch rounded-full" style={{ backgroundColor: service.colors[0] }} />
+            className={`flex-row items-center rounded-2xl border border-line bg-canvas p-3.5 ${inactive ? 'opacity-60' : ''}`}
+          >
+            <View
+              className="mr-3 w-1 self-stretch rounded-full"
+              style={{ backgroundColor: service.colors[0] }}
+            />
             <View className="w-[78px]">
               <Text numberOfLines={1} className="text-[15px] font-bold text-ink">
                 {formatTime(booking.startDate)}
@@ -151,7 +180,8 @@ export function BookingCard({ booking, index = 0, showDate }: Props) {
             <View className="flex-1 pr-2">
               <Text
                 numberOfLines={1}
-                className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}>
+                className={`text-[15px] font-semibold text-ink ${booking.status === 'cancelled' ? 'line-through' : ''}`}
+              >
                 {client.name}
               </Text>
               <Text numberOfLines={1} className="mt-0.5 text-[13px] text-ink-muted">

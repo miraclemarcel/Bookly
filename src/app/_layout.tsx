@@ -22,7 +22,14 @@ function StatusBarBackdrop() {
   return (
     <View
       pointerEvents="none"
-      style={{ position: 'absolute', top: 0, left: 0, right: 0, height: insets.top, backgroundColor: palette.canvas }}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: insets.top,
+        backgroundColor: palette.canvas,
+      }}
     />
   );
 }
@@ -39,11 +46,21 @@ export default function RootLayout() {
             screenOptions={{
               headerShown: false,
               contentStyle: { backgroundColor: palette.canvas },
-            }}>
+            }}
+          >
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="booking/new" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="booking/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="client/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen
+              name="booking/new"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="booking/[id]"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="client/[id]"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
           </Stack>
           <StatusBarBackdrop />
           <SplashOverlay ready={hydrated} />

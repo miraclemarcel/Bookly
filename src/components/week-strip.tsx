@@ -40,12 +40,16 @@ export function WeekStrip({ weekStart, selected, onSelect, onWeekChange, counts 
               onPress={() => {
                 haptic.tap();
                 onSelect(d);
-              }}>
-              <Text className={`text-[11px] font-semibold uppercase ${active ? 'text-white' : 'text-ink-faint'}`}>
+              }}
+            >
+              <Text
+                className={`text-[11px] font-semibold uppercase ${active ? 'text-white' : 'text-ink-faint'}`}
+              >
                 {weekdayShort(d)}
               </Text>
               <Text
-                className={`mt-1 text-lg font-bold ${active ? 'text-white' : isToday ? 'text-violet' : 'text-ink'}`}>
+                className={`mt-1 text-lg font-bold ${active ? 'text-white' : isToday ? 'text-violet' : 'text-ink'}`}
+              >
                 {d.getDate()}
               </Text>
               <View className="mt-1 h-1.5 flex-row gap-0.5">

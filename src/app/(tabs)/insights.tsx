@@ -52,7 +52,9 @@ function Bar({
 }) {
   const h = useSharedValue(0);
   useEffect(() => {
-    h.set(withDelay(index * 40, withSpring(Math.max(0.03, ratio), { damping: 16, stiffness: 120 })));
+    h.set(
+      withDelay(index * 40, withSpring(Math.max(0.03, ratio), { damping: 16, stiffness: 120 })),
+    );
   }, [h, ratio, index]);
   const style = useAnimatedStyle(() => ({ height: h.get() * CHART_HEIGHT }));
 
@@ -70,12 +72,19 @@ function Bar({
         )}
         <Animated.View
           style={[
-            { width: '62%', borderRadius: 6, backgroundColor: highlight || selected ? palette.violet : palette.surface3 },
+            {
+              width: '62%',
+              borderRadius: 6,
+              backgroundColor: highlight || selected ? palette.violet : palette.surface3,
+            },
             style,
           ]}
         />
       </View>
-      <Text numberOfLines={1} className={`mt-2 text-[11px] font-semibold ${selected ? 'text-ink' : 'text-ink-muted'}`}>
+      <Text
+        numberOfLines={1}
+        className={`mt-2 text-[11px] font-semibold ${selected ? 'text-ink' : 'text-ink-muted'}`}
+      >
         {label}
       </Text>
     </Pressable>
@@ -90,13 +99,17 @@ function GrowBar({ ratio, color, delay }: { ratio: number; color: string; delay:
   const style = useAnimatedStyle(() => ({ width: `${w.get() * 100}%` }));
   return (
     <View className="h-2 overflow-hidden rounded-full bg-surface-2">
-      <Animated.View style={[{ height: '100%', borderRadius: 999, backgroundColor: color }, style]} />
+      <Animated.View
+        style={[{ height: '100%', borderRadius: 999, backgroundColor: color }, style]}
+      />
     </View>
   );
 }
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <View className={`rounded-2xl border border-line bg-canvas p-4 ${className}`}>{children}</View>;
+  return (
+    <View className={`rounded-2xl border border-line bg-canvas p-4 ${className}`}>{children}</View>
+  );
 }
 
 export default function InsightsScreen() {
@@ -124,17 +137,25 @@ export default function InsightsScreen() {
       const end = addDays(start, bucketDays);
       const list = inRange.filter((b) => b.startDate >= start && b.startDate < end);
       return {
-        label: range === 'week' ? weekdayShort(start).slice(0, 2) : `${monthShort(start)} ${start.getDate()}`,
+        label:
+          range === 'week'
+            ? weekdayShort(start).slice(0, 2)
+            : `${monthShort(start)} ${start.getDate()}`,
         value: earned(list),
       };
     });
 
-    const statusCounts = (['completed', 'confirmed', 'no-show', 'cancelled'] as BookingStatus[]).map((s) => ({
+    const statusCounts = (
+      ['completed', 'confirmed', 'no-show', 'cancelled'] as BookingStatus[]
+    ).map((s) => ({
       status: s,
       count: inRange.filter((b) => b.status === s).length,
     }));
 
-    const byService = new Map<string, { name: string; emoji: string; color: string; count: number; revenue: number }>();
+    const byService = new Map<
+      string,
+      { name: string; emoji: string; color: string; count: number; revenue: number }
+    >();
     for (const b of inRange) {
       if (b.status === 'cancelled') continue;
       const e = byService.get(b.serviceId) ?? {
@@ -151,7 +172,9 @@ export default function InsightsScreen() {
     const services = [...byService.values()].sort((a, b) => b.count - a.count).slice(0, 4);
 
     const hours = Array.from({ length: CLOSE_HOUR - OPEN_HOUR }, (_, i) => OPEN_HOUR + i);
-    const heat = hours.map((h) => inRange.filter((b) => b.status !== 'cancelled' && b.startDate.getHours() === h).length);
+    const heat = hours.map(
+      (h) => inRange.filter((b) => b.status !== 'cancelled' && b.startDate.getHours() === h).length,
+    );
 
     const revenue = earned(inRange);
     const prevRevenue = earned(prev);
@@ -197,7 +220,12 @@ export default function InsightsScreen() {
     <View className="flex-1 bg-canvas">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 32, paddingHorizontal: 20 }}>
+        contentContainerStyle={{
+          paddingTop: insets.top + 16,
+          paddingBottom: 32,
+          paddingHorizontal: 20,
+        }}
+      >
         <Text className="text-[28px] font-bold text-ink">Insights</Text>
         <Text className="mt-0.5 text-sm text-ink-muted">How the studio is doing</Text>
 
@@ -218,16 +246,31 @@ export default function InsightsScreen() {
         <Animated.View entering={FadeInDown.duration(350)}>
           <Card className="mt-5 p-5">
             <View className="flex-row items-center justify-between">
-              <Text className="text-xs font-bold uppercase tracking-wider text-ink-muted">Earned</Text>
-              <View className="flex-row items-center rounded-full px-2.5 py-1" style={{ backgroundColor: trendColor + '1A' }}>
-                <Ionicons name={up ? 'trending-up' : 'trending-down'} size={14} color={trendColor} />
+              <Text className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+                Earned
+              </Text>
+              <View
+                className="flex-row items-center rounded-full px-2.5 py-1"
+                style={{ backgroundColor: trendColor + '1A' }}
+              >
+                <Ionicons
+                  name={up ? 'trending-up' : 'trending-down'}
+                  size={14}
+                  color={trendColor}
+                />
                 <Text className="ml-1 text-xs font-bold" style={{ color: trendColor }}>
                   {Math.abs(Math.round(data.delta * 100))}%
                 </Text>
               </View>
             </View>
-            <AnimatedNumber value={data.revenue} format={money} className="mt-2 text-4xl font-bold text-ink" />
-            <Text className="mt-1 text-[13px] text-ink-muted">vs. the previous {data.days} days</Text>
+            <AnimatedNumber
+              value={data.revenue}
+              format={money}
+              className="mt-2 text-4xl font-bold text-ink"
+            />
+            <Text className="mt-1 text-[13px] text-ink-muted">
+              vs. the previous {data.days} days
+            </Text>
 
             <View className="mt-5 flex-row items-end">
               {data.buckets.map((b, i) => (
@@ -263,12 +306,19 @@ export default function InsightsScreen() {
           <Animated.View entering={FadeInDown.delay(140).duration(350)} className="flex-1">
             <Card>
               <Text className="text-[13px] text-ink-muted">Avg. ticket</Text>
-              <AnimatedNumber value={data.avgTicket} format={money} className="mt-1 text-2xl font-bold text-ink" />
+              <AnimatedNumber
+                value={data.avgTicket}
+                format={money}
+                className="mt-1 text-2xl font-bold text-ink"
+              />
             </Card>
           </Animated.View>
         </View>
 
-        <SectionHeader title="Booking outcomes" right={<Text className="text-[13px] text-ink-muted">{data.total} total</Text>} />
+        <SectionHeader
+          title="Booking outcomes"
+          right={<Text className="text-[13px] text-ink-muted">{data.total} total</Text>}
+        />
         <Card>
           <View className="h-3 flex-row overflow-hidden rounded-full bg-surface-2">
             {data.statusCounts.map(({ status, count }) =>
@@ -284,7 +334,10 @@ export default function InsightsScreen() {
           <View className="mt-4 flex-row flex-wrap">
             {data.statusCounts.map(({ status, count }) => (
               <View key={status} className="mb-2 w-1/2 flex-row items-center">
-                <View className="mr-2 h-2.5 w-2.5 rounded-full" style={{ backgroundColor: STATUS_META[status].color }} />
+                <View
+                  className="mr-2 h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: STATUS_META[status].color }}
+                />
                 <Text className="text-sm text-ink-muted">{STATUS_META[status].label}</Text>
                 <Text className="ml-1.5 text-sm font-bold text-ink">{count}</Text>
               </View>
@@ -339,13 +392,27 @@ export default function InsightsScreen() {
         <View className="flex-row gap-3">
           <PressableScale
             className="flex-1 flex-row items-center justify-center rounded-xl border border-line py-3.5"
-            onPress={() => confirm('Reset demo data?', 'Replaces everything with fresh sample bookings.', resetDemo)}>
+            onPress={() =>
+              confirm(
+                'Reset demo data?',
+                'Replaces everything with fresh sample bookings.',
+                resetDemo,
+              )
+            }
+          >
             <Ionicons name="refresh" size={16} color={palette.ink} />
             <Text className="ml-2 font-semibold text-ink">Reset demo</Text>
           </PressableScale>
           <PressableScale
             className="flex-1 flex-row items-center justify-center rounded-xl bg-coral/10 py-3.5"
-            onPress={() => confirm('Clear everything?', 'Deletes all bookings and clients. This cannot be undone.', clearAll)}>
+            onPress={() =>
+              confirm(
+                'Clear everything?',
+                'Deletes all bookings and clients. This cannot be undone.',
+                clearAll,
+              )
+            }
+          >
             <Ionicons name="trash-outline" size={16} color={palette.coral} />
             <Text className="ml-2 font-semibold text-coral">Clear all</Text>
           </PressableScale>

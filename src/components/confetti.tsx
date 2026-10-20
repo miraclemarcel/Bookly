@@ -11,7 +11,14 @@ import Animated, {
 
 import { palette } from '@/lib/theme';
 
-const COLORS = [palette.violet, palette.pink, palette.amber, palette.mint, palette.sky, palette.coral];
+const COLORS = [
+  palette.violet,
+  palette.pink,
+  palette.amber,
+  palette.mint,
+  palette.sky,
+  palette.coral,
+];
 
 function seeded(seed: number) {
   let s = seed * 9301 + 49297;
@@ -35,7 +42,9 @@ function ConfettiPiece({ piece }: { piece: Piece }) {
   const p = useSharedValue(0);
 
   useEffect(() => {
-    p.set(withDelay(piece.delay, withTiming(1, { duration: 1500, easing: Easing.out(Easing.cubic) })));
+    p.set(
+      withDelay(piece.delay, withTiming(1, { duration: 1500, easing: Easing.out(Easing.cubic) })),
+    );
   }, [p, piece.delay]);
 
   const style = useAnimatedStyle(() => {
@@ -87,7 +96,11 @@ export function Confetti({ count = 46, burstKey = 0 }: { count?: number; burstKe
   }, [count, burstKey]);
 
   return (
-    <View pointerEvents="none" style={StyleSheet.absoluteFill} className="items-center justify-center">
+    <View
+      pointerEvents="none"
+      style={StyleSheet.absoluteFill}
+      className="items-center justify-center"
+    >
       {pieces.map((piece, i) => (
         <ConfettiPiece key={`${burstKey}-${i}`} piece={piece} />
       ))}

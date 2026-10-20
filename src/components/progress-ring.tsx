@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { View } from 'react-native';
-import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -27,7 +32,12 @@ export function ProgressRing({
   const p = useSharedValue(0);
 
   useEffect(() => {
-    p.set(withTiming(Math.max(0, Math.min(1, progress)), { duration: 1100, easing: Easing.out(Easing.cubic) }));
+    p.set(
+      withTiming(Math.max(0, Math.min(1, progress)), {
+        duration: 1100,
+        easing: Easing.out(Easing.cubic),
+      }),
+    );
   }, [p, progress]);
 
   const animatedProps = useAnimatedProps(() => ({
@@ -36,8 +46,19 @@ export function ProgressRing({
 
   return (
     <View style={{ width: size, height: size }} className="items-center justify-center">
-      <Svg width={size} height={size} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
-        <Circle cx={size / 2} cy={size / 2} r={radius} stroke={track} strokeWidth={stroke} fill="none" />
+      <Svg
+        width={size}
+        height={size}
+        style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}
+      >
+        <Circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={track}
+          strokeWidth={stroke}
+          fill="none"
+        />
         <AnimatedCircle
           cx={size / 2}
           cy={size / 2}

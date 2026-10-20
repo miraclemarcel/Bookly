@@ -24,18 +24,36 @@ function NowLine({ now }: { now: Date }) {
   const minutes = now.getHours() * 60 + now.getMinutes();
   const pulse = useSharedValue(0);
   useEffect(() => {
-    pulse.set(withRepeat(withTiming(1, { duration: 1200, easing: Easing.out(Easing.quad) }), -1, false));
+    pulse.set(
+      withRepeat(withTiming(1, { duration: 1200, easing: Easing.out(Easing.quad) }), -1, false),
+    );
   }, [pulse]);
-  const ring = useAnimatedStyle(() => ({ opacity: 1 - pulse.get(), transform: [{ scale: 1 + pulse.get() * 2 }] }));
+  const ring = useAnimatedStyle(() => ({
+    opacity: 1 - pulse.get(),
+    transform: [{ scale: 1 + pulse.get() * 2 }],
+  }));
 
   if (minutes < OPEN_HOUR * 60 || minutes > CLOSE_HOUR * 60) return null;
   const top = ((minutes - OPEN_HOUR * 60) / 60) * HOUR_HEIGHT;
 
   return (
-    <View pointerEvents="none" className="absolute right-0 flex-row items-center" style={{ top: top - 5, left: GUTTER - 5 }}>
+    <View
+      pointerEvents="none"
+      className="absolute right-0 flex-row items-center"
+      style={{ top: top - 5, left: GUTTER - 5 }}
+    >
       <View className="h-2.5 w-2.5 items-center justify-center">
         <Animated.View
-          style={[{ position: 'absolute', width: 10, height: 10, borderRadius: 5, backgroundColor: palette.coral }, ring]}
+          style={[
+            {
+              position: 'absolute',
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: palette.coral,
+            },
+            ring,
+          ]}
         />
         <View className="h-2.5 w-2.5 rounded-full bg-coral" />
       </View>
@@ -44,7 +62,15 @@ function NowLine({ now }: { now: Date }) {
   );
 }
 
-export function DayTimeline({ day, bookings, now }: { day: Date; bookings: BookingView[]; now: Date }) {
+export function DayTimeline({
+  day,
+  bookings,
+  now,
+}: {
+  day: Date;
+  bookings: BookingView[];
+  now: Date;
+}) {
   const hours = Array.from({ length: CLOSE_HOUR - OPEN_HOUR }, (_, i) => OPEN_HOUR + i);
   const visible = bookings.filter((b) => b.status !== 'cancelled');
 
@@ -61,8 +87,12 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
               pathname: '/booking/new',
               params: { date: dayKey(day), time: `${String(h).padStart(2, '0')}:00` },
             });
-          }}>
-          <Text className="w-[52px] text-[11px] font-semibold text-ink-faint" style={{ marginTop: -7 }}>
+          }}
+        >
+          <Text
+            className="w-[52px] text-[11px] font-semibold text-ink-faint"
+            style={{ marginTop: -7 }}
+          >
             {formatHour(h)}
           </Text>
           <View className="flex-1 border-t border-line" />
@@ -79,7 +109,8 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
           <Animated.View
             key={b.id}
             entering={FadeInRight.delay(i * 40).duration(300)}
-            style={{ position: 'absolute', right: 0, top: top + 2, height, left: GUTTER + 6 }}>
+            style={{ position: 'absolute', right: 0, top: top + 2, height, left: GUTTER + 6 }}
+          >
             <Pressable
               className="flex-1 overflow-hidden rounded-xl border-l-4 px-3 py-1.5"
               style={{
@@ -89,12 +120,18 @@ export function DayTimeline({ day, bookings, now }: { day: Date; bookings: Booki
               onPress={() => {
                 haptic.tap();
                 router.push({ pathname: '/booking/[id]', params: { id: b.id } });
-              }}>
+              }}
+            >
               <View className="flex-row items-center justify-between">
-                <Text numberOfLines={1} className={`flex-1 text-[13px] font-bold ${done ? 'text-ink-muted' : 'text-ink'}`}>
+                <Text
+                  numberOfLines={1}
+                  className={`flex-1 text-[13px] font-bold ${done ? 'text-ink-muted' : 'text-ink'}`}
+                >
                   {b.service.emoji} {b.client.name}
                 </Text>
-                {compact && <Text className="ml-2 text-[11px] text-ink-muted">{formatTime(b.startDate)}</Text>}
+                {compact && (
+                  <Text className="ml-2 text-[11px] text-ink-muted">{formatTime(b.startDate)}</Text>
+                )}
               </View>
               {!compact && (
                 <Text className="mt-0.5 text-[11px] text-ink-muted">
